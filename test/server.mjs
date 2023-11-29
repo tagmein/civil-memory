@@ -23,9 +23,29 @@ async function main() {
    ? portEnv
    : DEFAULT_PORT
 
- const kv = civilMemoryKV.disk({
+ const cloudflareKV = civilMemoryKV.cloudflare()
+ const diskKV = civilMemoryKV.disk({
   rootDir: STORAGE_DIR,
  })
+ const vercelKV = civilMemoryKV.vercel()
+ const volatileKV = civilMemoryKV.volatile()
+
+ function getKVByMode(mode) {
+  switch (mode) {
+   case 'cloudflare':
+    return cloudflareKV
+   case 'disk':
+    return diskKV
+   case 'vercel':
+    return vercelKV
+   case 'volatile':
+    return volatileKV
+   default:
+    throw new Error(
+     'parameter mode must be one of: cloudflare, disk, vercel, volatile'
+    )
+  }
+ }
 
  const httpServer = http.createServer(async function (request, response) {
   try {
@@ -33,7 +53,8 @@ async function main() {
    const requestParams = querystring.parse(requestParamString ?? '')
    console.log(request.method, requestPath, JSON.stringify(requestParams))
    switch (request.method) {
-    case 'DELETE':
+    case 'DELETE': {
+     const kv = getKVByMode(requestParams.mode)
      if (typeof requestParams.key !== 'string') {
       response.statusCode = 400
       response.end(JSON.stringify({ error: 'request parameter key missing' }))
@@ -42,7 +63,8 @@ async function main() {
      response.statusCode = 200
      response.end((await kv.delete(requestParams.key)).toString())
      return
-    case 'GET':
+    }
+    case 'GET': {
      if (request.url === '/') {
       response.statusCode = 200
       response.end(indexHtml)
@@ -54,6 +76,7 @@ async function main() {
       response.end(faviconIco)
       return
      }
+     const kv = getKVByMode(requestParams.mode)
      if (typeof requestParams.key !== 'string') {
       response.statusCode = 400
       response.end(JSON.stringify({ error: 'request parameter key missing' }))
@@ -62,7 +85,9 @@ async function main() {
      response.statusCode = 200
      response.end((await kv.get(requestParams.key)) ?? '')
      return
-    case 'POST':
+    }
+    case 'POST': {
+     const kv = getKVByMode(requestParams.mode)
      if (typeof requestParams.key !== 'string') {
       response.statusCode = 400
       response.end(JSON.stringify({ error: 'request parameter key missing' }))
@@ -71,20 +96,14 @@ async function main() {
      const requestBody = await collectRequestBody(request)
      await kv.set(requestParams.key, requestBody)
      response.statusCode = 200
-     const ttl = parseInt(requestParams.expiration_ttl, 10)
-     clearTimeout(MEMORY_EXPIRE_KEY.get(requestParams.key))
-     async function eraseMemoryKey() {
-      await kv.delete(requestParams.key)
-     }
-     if (!isNaN(ttl)) {
-      MEMORY_EXPIRE_KEY.set(requestParams.key, setTimeout(eraseMemoryKey, ttl))
-     }
      response.end()
      return
-    default:
+    }
+    default: {
      response.statusCode = 405
      response.end('invalid method')
      return
+    }
    }
   } catch (e) {
    console.error(e)
@@ -96,17 +115,24 @@ async function main() {
 
  httpServer.listen(port, 'localhost', function () {
   console.log(
-   `Server listening on http://localhost:${port}
-Available operations:
+   `Test suite ready at http://localhost:${port}
+
+Valid values for the mode parameter:
+ • cloudflare
+ • disk
+ • vercel
+ • volatile
+
+All API operations:
 
  • Read value at key
-      GET ?key=urlEncodedKey
+   GET ?mode=disk&key=urlEncodedKey
 
  • Delete value at key
-   DELETE ?key=urlEncodedKey
+   DELETE ?mode=disk&key=urlEncodedKey
 
- • Write value at key (expires in 60 seconds)
-     POST ?key=urlEncodedKey&expiration_ttl=60 <body>`
+ • Write value at key
+   POST ?mode=disk&key=urlEncodedKey <body>`
   )
  })
 }

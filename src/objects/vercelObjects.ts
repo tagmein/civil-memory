@@ -1,5 +1,5 @@
-import { CivilMemoryKV } from '..'
+import { CivilMemoryObjects } from '..'
 
-export function vercelKV(): CivilMemoryKV {
+export function vercelObjects(): CivilMemoryObjects {
  return {}
 }

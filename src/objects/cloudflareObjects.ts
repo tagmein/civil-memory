@@ -1,5 +1,5 @@
-import { CivilMemoryKV } from '..'
+import { CivilMemoryObjects } from '..'
 
-export function cloudflareKV(): CivilMemoryKV {
+export function cloudflareObjects(): CivilMemoryObjects {
  return {}
 }

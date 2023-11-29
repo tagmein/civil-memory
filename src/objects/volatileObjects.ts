@@ -1,5 +1,5 @@
-import { CivilMemoryKV } from '..'
+import { CivilMemoryObjects } from '..'
 
-export function volatileKV(): CivilMemoryKV {
+export function volatileObjects(): CivilMemoryObjects {
  return {}
 }

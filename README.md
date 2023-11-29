@@ -31,6 +31,14 @@ npm install --save @tagmein/civil-memory
 
 ## KV Usage
 
+The structure of keys is as follows:
+
+```
+<namepsace>#<key>
+```
+
+Both the `namespace` and the `key` should be URL-encoded to prevent unencoded `#` characters in them from interfering with the parsing of the key.
+
 ```TypeScript
 import { civilMemoryKV } from '@tagmein/civil-memory'
 
