@@ -1,13 +1,13 @@
 {
+ "private": false,
  "name": "@tagmein/civil-memory",
  "version": "0.0.0",
  "description": "Short and long-term memory for your web applications",
  "main": "dist/index.js",
  "types": "dist/index.d.ts",
  "scripts": {
-  "build": "tsc",
+  "build": "rm -rf dist && tsc",
   "build:watch": "tsc --watch",
-  "postpack": "rm packed/tagmein-civil-memory-0.0.0.tgz && mv tagmein-civil-memory-0.0.0.tgz packed",
   "test": "nodemon -w dist -w test -e html,js,mjs test/server.mjs"
  },
  "keywords": [

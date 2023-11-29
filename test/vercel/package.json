@@ -10,7 +10,6 @@
   "@vercel/node": "^3.0.11"
  },
  "dependencies": {
-  "@vercel/kv": "^1.0.0",
-  "@tagmein/civil-memory": "file:../.."
+  "@tagmein/civil-memory": "0.0.0"
  }
 }
