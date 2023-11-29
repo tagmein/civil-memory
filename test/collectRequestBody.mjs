@@ -50,7 +50,7 @@ export async function collectRequestBody(request) {
    })
    request.on('end', function () {
     if (!error) {
-     resolve(Buffer.concat(bodyChunks))
+     resolve(Buffer.concat(bodyChunks).toString())
     }
    })
   } else {

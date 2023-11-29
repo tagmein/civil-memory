@@ -1,0 +1,12 @@
+{
+ "name": "@tagmein/civil-memory_test_vercel",
+ "version": "0.0.0",
+ "description": "",
+ "main": "index.js",
+ "scripts": {},
+ "author": "Nate Ferrero <nate@tagme.in>",
+ "license": "ISC",
+ "devDependencies": {
+  "@vercel/node": "^3.0.11"
+ }
+}

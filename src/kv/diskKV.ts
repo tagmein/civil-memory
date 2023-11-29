@@ -25,10 +25,7 @@ export function diskKV({ rootDir }: CivilMemoryDiskKVOptions): CivilMemoryKV {
    const namespace = key.split('#')[0]
    try {
     await unlink(await diskPath(namespace, key))
-    return true
-   } catch (e) {
-    return false
-   }
+   } catch (e) {}
   },
   async get(key: string) {
    const namespace = key.split('#')[0]

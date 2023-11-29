@@ -7,10 +7,7 @@ export function volatileKV(): CivilMemoryKV {
   async delete(key: string) {
    const [namespace, keyName] = key.split('#')
    const namespaceMap = data.get(namespace)
-   if (!namespaceMap) return false
-
-   namespaceMap.delete(keyName)
-   return true
+   namespaceMap?.delete?.(keyName)
   },
 
   async get(key: string) {

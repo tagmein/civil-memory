@@ -11,7 +11,7 @@ import { volatileObjects } from './objects/volatileObjects'
 export interface CivilMemoryKV {
  get(key: string): Promise<string | null>
  set(key: string, value: string): Promise<void>
- delete(key: string): Promise<boolean>
+ delete(key: string): Promise<void>
 }
 
 export interface CivilMemoryObjectsObjectInfo {

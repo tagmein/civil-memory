@@ -47,6 +47,9 @@ async function main() {
   }
  }
 
+ const TEST_REQUEST_KEYS = ['mykey', 'mynamespace#mykey']
+ const TEST_REQUEST_BODY = 'myvalue'
+
  const httpServer = http.createServer(async function (request, response) {
   try {
    const [requestPath, requestParamString] = request.url.split('?')
@@ -60,8 +63,9 @@ async function main() {
       response.end(JSON.stringify({ error: 'request parameter key missing' }))
       return
      }
+     await kv.delete(requestParams.key)
      response.statusCode = 200
-     response.end((await kv.delete(requestParams.key)).toString())
+     response.end()
      return
     }
     case 'GET': {
@@ -93,7 +97,27 @@ async function main() {
       response.end(JSON.stringify({ error: 'request parameter key missing' }))
       return
      }
+     if (!TEST_REQUEST_KEYS.includes(requestParams.key)) {
+      response.statusCode = 400
+      response.end(
+       JSON.stringify({
+        error: `request parameter key must be one of ${JSON.stringify(
+         TEST_REQUEST_KEYS
+        )}`,
+       })
+      )
+      return
+     }
      const requestBody = await collectRequestBody(request)
+     if (requestBody !== TEST_REQUEST_BODY) {
+      response.statusCode = 400
+      response.end(
+       JSON.stringify({
+        error: `request body must be ${JSON.stringify(TEST_REQUEST_BODY)}`,
+       })
+      )
+      return
+     }
      await kv.set(requestParams.key, requestBody)
      response.statusCode = 200
      response.end()

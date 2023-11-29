@@ -95,11 +95,6 @@
      let modePass = 0
      let modeFail = 0
 
-     results.textContent += `Running tests for ${mode} mode\n`
-
-     const key = 'mykey'
-     const value = 'myvalue'
-
      // Test helper
      async function runTest(name, testFn) {
       results.textContent += `- ${name} ... `
@@ -122,51 +117,60 @@
       }
      }
 
-     await runTest('Delete key to reset', async () => {
-      const resp = await fetch(
-       `/?mode=${mode}&key=${encodeURIComponent(key)}`,
-       {
-        method: 'DELETE',
-       }
-      )
+     results.textContent += `Running tests for '${mode}' mode\n`
 
-      return expect(resp).toBeOk()
-     })
+     const value = 'myvalue'
 
-     await runTest('Get after delete should be empty', async () => {
-      const resp = await fetch(`/?mode=${mode}&key=${encodeURIComponent(key)}`)
+     for (const key of ['mykey', 'mynamespace#mykey']) {
+      const k = JSON.stringify(key)
 
-      return expect(resp).toBeOk().toBeEmpty()
-     })
+      await runTest(`Delete key ${k} to reset`, async () => {
+       const resp = await fetch(
+        `/?mode=${mode}&key=${encodeURIComponent(key)}`,
+        {
+         method: 'DELETE',
+        }
+       )
 
-     await runTest('Post value', async () => {
-      const resp = await fetch(
-       `/?mode=${mode}&key=${encodeURIComponent(key)}`,
-       {
-        method: 'POST',
-        body: value,
-       }
-      )
+       return expect(resp).toBeOk()
+      })
 
-      return expect(resp).toBeOk()
-     })
+      await runTest(`Get after delete ${k} should be empty`, async () => {
+       const resp = await fetch(`/?mode=${mode}&key=${encodeURIComponent(key)}`)
 
-     await runTest('Get value after post', async () => {
-      const resp = await fetch(`/?mode=${mode}&key=${encodeURIComponent(key)}`)
+       return expect(resp).toBeOk().toBeEmpty()
+      })
 
-      return expect(resp).toBeOk().toEqual(value)
-     })
+      await runTest(`Post value to ${k}`, async () => {
+       const resp = await fetch(
+        `/?mode=${mode}&key=${encodeURIComponent(key)}`,
+        {
+         method: 'POST',
+         body: value,
+        }
+       )
 
-     await runTest('Delete key to clean up', async () => {
-      const resp = await fetch(
-       `/?mode=${mode}&key=${encodeURIComponent(key)}`,
-       {
-        method: 'DELETE',
-       }
-      )
+       return expect(resp).toBeOk()
+      })
 
-      return expect(resp).toBeOk()
-     })
+      await runTest(`Get value of ${k} after post`, async () => {
+       const resp = await fetch(`/?mode=${mode}&key=${encodeURIComponent(key)}`)
+
+       return expect(resp).toBeOk().toEqual(value)
+      })
+
+      await runTest(`Delete key ${k} to clean up`, async () => {
+       const resp = await fetch(
+        `/?mode=${mode}&key=${encodeURIComponent(key)}`,
+        {
+         method: 'DELETE',
+        }
+       )
+
+       return expect(resp).toBeOk()
+      })
+     }
+
      // Print summary
      results.textContent += `\nTest mode '${mode}' passed: ${modePass} failed: ${modeFail}\n\n`
     }
