@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { civilMemoryKV } from '../../../src'
+import { civilMemoryKV } from '../../../dist'
 
 export default async function (
  request: VercelRequest,
