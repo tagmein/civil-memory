@@ -15,16 +15,8 @@
 
   <h2>Modes</h2>
   <div>
-   <input type="checkbox" id="cloudflare" checked />
-   <label for="cloudflare">cloudflare</label>
-  </div>
-  <div>
    <input type="checkbox" id="disk" checked />
    <label for="disk">disk</label>
-  </div>
-  <div>
-   <input type="checkbox" id="vercel" checked />
-   <label for="vercel">vercel</label>
   </div>
   <div>
    <input type="checkbox" id="volatile" checked />
@@ -87,7 +79,7 @@
     const results = document.getElementById('results')
     results.textContent = ''
 
-    const testModes = ['cloudflare', 'disk', 'vercel', 'volatile'].filter(
+    const testModes = ['disk', 'volatile'].filter(
      (mode) => document.getElementById(mode).checked
     )
 

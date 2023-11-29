@@ -23,21 +23,15 @@ async function main() {
    ? portEnv
    : DEFAULT_PORT
 
- const cloudflareKV = civilMemoryKV.cloudflare()
  const diskKV = civilMemoryKV.disk({
   rootDir: STORAGE_DIR,
  })
- const vercelKV = civilMemoryKV.vercel()
  const volatileKV = civilMemoryKV.volatile()
 
  function getKVByMode(mode) {
   switch (mode) {
-   case 'cloudflare':
-    return cloudflareKV
    case 'disk':
     return diskKV
-   case 'vercel':
-    return vercelKV
    case 'volatile':
     return volatileKV
    default:
@@ -142,9 +136,7 @@ async function main() {
    `Test suite ready at http://localhost:${port}
 
 Valid values for the mode parameter:
- • cloudflare
  • disk
- • vercel
  • volatile
 
 All API operations:
