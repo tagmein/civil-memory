@@ -57,8 +57,8 @@ const kv = civilMemoryKV.cloudflare({
 
 // see https://vercel.com/docs/storage/vercel-kv/quickstart
 const kv = civilMemoryKV.vercel({
- url: process.env.MY_KV_REST_API_URL,
- token: process.env.MY_KV_REST_API_TOKEN,
+ token: process.env.KV_REST_API_TOKEN,
+ url: process.env.KV_REST_API_URL,
 })
 
 // use the kv client to ...

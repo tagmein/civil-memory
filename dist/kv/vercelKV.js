@@ -38,13 +38,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.vercelKV = void 0;
 var kv_1 = require("@vercel/kv");
-function vercelKV() {
+function vercelKV(_a) {
+    var token = _a.token, url = _a.url;
+    var kv = (0, kv_1.createClient)({
+        token: token,
+        url: url,
+    });
     return {
         delete: function (key) {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4 /*yield*/, kv_1.kv.getdel(key)];
+                        case 0: return [4 /*yield*/, kv.getdel(key)];
                         case 1:
                             _a.sent();
                             return [2 /*return*/];
@@ -55,14 +60,14 @@ function vercelKV() {
         get: function (key) {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
-                    return [2 /*return*/, kv_1.kv.get(key)];
+                    return [2 /*return*/, kv.get(key)];
                 });
             });
         },
         set: function (key, value) {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
-                    kv_1.kv.set(key, value);
+                    kv.set(key, value);
                     return [2 /*return*/];
                 });
             });

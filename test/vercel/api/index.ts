@@ -1,11 +1,21 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { civilMemoryKV } from '../../../dist'
+import { civilMemoryKV } from '@tagmein/civil-memory'
 
 export default async function (
  request: VercelRequest,
  response: VercelResponse
 ) {
- const kv = civilMemoryKV.vercel()
+ const { KV_REST_API_URL, KV_REST_API_TOKEN } = process.env
+ if (typeof KV_REST_API_TOKEN !== 'string') {
+  throw new Error('KV_REST_API_TOKEN environment variable is missing')
+ }
+ if (typeof KV_REST_API_URL !== 'string') {
+  throw new Error('KV_REST_API_URL environment variable is missing')
+ }
+ const kv = civilMemoryKV.vercel({
+  url: KV_REST_API_URL,
+  token: KV_REST_API_TOKEN,
+ })
  const { key, mode } = request.query
  if (mode !== 'vercel') {
   return response.status(400).end(`mode parameter must be 'vercel'`)

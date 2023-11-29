@@ -1,7 +1,17 @@
-import { kv } from '@vercel/kv'
+import { createClient } from '@vercel/kv'
 import { CivilMemoryKV } from '..'
 
-export function vercelKV(): CivilMemoryKV {
+export function vercelKV({
+ token,
+ url,
+}: {
+ token: string
+ url: string
+}): CivilMemoryKV {
+ const kv = createClient({
+  token,
+  url,
+ })
  return {
   async delete(key) {
    await kv.getdel(key)
