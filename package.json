@@ -1,7 +1,7 @@
 {
  "private": false,
  "name": "@tagmein/civil-memory",
- "version": "0.0.0",
+ "version": "0.0.2",
  "description": "Short and long-term memory for your web applications",
  "main": "dist/index.js",
  "types": "dist/index.d.ts",
