@@ -25,7 +25,7 @@ npm install --save @tagmein/civil-memory
 
 3. **`cloudflare`** &mdash; [Cloudflare Workers KV](https://developers.cloudflare.com/kv) with a limit of 25MiB for key-value values and [Cloudflare R2](https://developers.cloudflare.com/r2) with a limit of 315MiB for objects. Note that this mode is only usable within a Cloudflare worker as Cloudflare Workers KV cannot be accessed externally.
 
-See Cloudflare test suite from the `test/cloudflare` directory running here: (todo)
+See Cloudflare test suite from the `test/cloudflare` directory running here: https://civil-memory.pages.dev/
 
 4. **`vercel`** &mdash; [Vercel KV](https://vercel.com/storage/kv) with a limit of 100MiB for key-value values and [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) with a limit of 500 MiB for objects.
 
@@ -60,7 +60,7 @@ const kv = civilMemoryKV.cloudflare({
 })
 
 // see https://vercel.com/docs/storage/vercel-kv/quickstart
-const kv = civilMemoryKV.vercel({
+const kv = await civilMemoryKV.vercel({
  token: process.env.KV_REST_API_TOKEN,
  url: process.env.KV_REST_API_URL,
 })

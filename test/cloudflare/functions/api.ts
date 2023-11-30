@@ -12,7 +12,7 @@ interface Env {
 const TEST_REQUEST_KEYS = ['mykey', 'mynamespace#mykey']
 const TEST_REQUEST_BODY = 'myvalue'
 
-function validateKey(key: string | string[]): string | CWResponse {
+function validateKey(key: string | null): string | CWResponse {
  if (typeof key !== 'string') {
   return new Response(
    JSON.stringify({
@@ -32,8 +32,9 @@ function validateKey(key: string | string[]): string | CWResponse {
  return key
 }
 
-export const onRequestGet: PagesFunction<Env> = async ({ env, params }) => {
- const key = validateKey(params.key)
+export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
+ const { searchParams } = new URL(request.url)
+ const key = validateKey(searchParams.get('key'))
  if (typeof key !== 'string') {
   return key
  }
@@ -47,8 +48,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, params }) => {
  return new Response(value) as unknown as CWResponse
 }
 
-export const onRequestDelete: PagesFunction<Env> = async ({ env, params }) => {
- const key = validateKey(params.key)
+export const onRequestDelete: PagesFunction<Env> = async ({ env, request }) => {
+ const { searchParams } = new URL(request.url)
+ const key = validateKey(searchParams.get('key'))
  if (typeof key !== 'string') {
   return key
  }
@@ -62,12 +64,9 @@ export const onRequestDelete: PagesFunction<Env> = async ({ env, params }) => {
  return new Response() as unknown as CWResponse
 }
 
-export const onRequestPost: PagesFunction<Env> = async ({
- env,
- params,
- request,
-}) => {
- const key = validateKey(params.key)
+export const onRequestPost: PagesFunction<Env> = async ({ env, request }) => {
+ const { searchParams } = new URL(request.url)
+ const key = validateKey(searchParams.get('key'))
  if (typeof key !== 'string') {
   return key
  }
