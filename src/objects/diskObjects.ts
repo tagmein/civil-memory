@@ -1,7 +1,7 @@
 import type { mkdir, stat, unlink, writeFile } from 'node:fs/promises'
+import type { join } from 'node:path'
 
 import { CivilMemoryObjects } from '..'
-import { join } from 'node:path'
 import type { createReadStream, ReadStream } from 'node:fs'
 
 export interface CivilMemoryDiskObjectsOptions {
@@ -15,23 +15,29 @@ export interface CivilMemoryDiskObjectsOptions {
   unlink: typeof unlink
   writeFile: typeof writeFile
  }
+ path: { join: typeof join }
 }
 
 export function diskObjects({
  rootDir,
  fs,
  fsPromises,
+ path,
 }: CivilMemoryDiskObjectsOptions): CivilMemoryObjects {
  let isInitialized = false
  async function diskPath(namespace: string, key: string) {
-  const namespaceDirPath = join(rootDir, encodeURIComponent(namespace))
+  const namespaceDirPath = path.join(rootDir, encodeURIComponent(namespace))
   await fsPromises.mkdir(namespaceDirPath, {
    recursive: true,
    // todo cache our knowledge that the directory
    // exists for performance enhancement here
   })
   isInitialized = true
-  return join(rootDir, encodeURIComponent(namespace), encodeURIComponent(key))
+  return path.join(
+   rootDir,
+   encodeURIComponent(namespace),
+   encodeURIComponent(key)
+  )
  }
 
  return {

@@ -26,6 +26,7 @@ async function main() {
  const diskKV = civilMemoryKV.disk({
   rootDir: STORAGE_DIR,
   fsPromises: { mkdir, readFile, unlink, writeFile },
+  path: { join },
  })
  const volatileKV = civilMemoryKV.volatile()
 

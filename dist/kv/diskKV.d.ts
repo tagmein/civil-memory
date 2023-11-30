@@ -1,5 +1,7 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import type { mkdir, readFile, unlink, writeFile } from 'node:fs/promises';
+import type { join } from 'node:path';
 import { CivilMemoryKV } from '..';
 export interface CivilMemoryDiskKVOptions {
     rootDir: string;
@@ -9,5 +11,8 @@ export interface CivilMemoryDiskKVOptions {
         unlink: typeof unlink;
         writeFile: typeof writeFile;
     };
+    path: {
+        join: typeof join;
+    };
 }
-export declare function diskKV({ rootDir, fsPromises, }: CivilMemoryDiskKVOptions): CivilMemoryKV;
+export declare function diskKV({ rootDir, fsPromises, path, }: CivilMemoryDiskKVOptions): CivilMemoryKV;

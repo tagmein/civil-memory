@@ -10,6 +10,6 @@
   "@cloudflare/workers-types": "^4.20231121.0"
  },
  "dependencies": {
-  "@tagmein/civil-memory": "^0.0.5"
+  "@tagmein/civil-memory": "^0.0.6"
  }
 }

@@ -37,9 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.diskObjects = void 0;
-var node_path_1 = require("node:path");
 function diskObjects(_a) {
-    var rootDir = _a.rootDir, fs = _a.fs, fsPromises = _a.fsPromises;
+    var rootDir = _a.rootDir, fs = _a.fs, fsPromises = _a.fsPromises, path = _a.path;
     var isInitialized = false;
     function diskPath(namespace, key) {
         return __awaiter(this, void 0, void 0, function () {
@@ -47,7 +46,7 @@ function diskObjects(_a) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        namespaceDirPath = (0, node_path_1.join)(rootDir, encodeURIComponent(namespace));
+                        namespaceDirPath = path.join(rootDir, encodeURIComponent(namespace));
                         return [4 /*yield*/, fsPromises.mkdir(namespaceDirPath, {
                                 recursive: true,
                                 // todo cache our knowledge that the directory
@@ -56,7 +55,7 @@ function diskObjects(_a) {
                     case 1:
                         _a.sent();
                         isInitialized = true;
-                        return [2 /*return*/, (0, node_path_1.join)(rootDir, encodeURIComponent(namespace), encodeURIComponent(key))];
+                        return [2 /*return*/, path.join(rootDir, encodeURIComponent(namespace), encodeURIComponent(key))];
                 }
             });
         });
