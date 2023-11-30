@@ -1,14 +1,15 @@
 {
  "private": false,
  "name": "@tagmein/civil-memory",
- "version": "0.0.7",
+ "version": "0.0.8",
  "description": "Short and long-term memory for your web applications",
  "main": "dist/index.js",
  "types": "dist/index.d.ts",
  "scripts": {
   "build": "rm -rf dist && tsc",
   "build:watch": "tsc --watch",
-  "test": "nodemon -w dist -w test/local -e html,js,mjs test/local/server.mjs"
+  "test": "nodemon -w dist -w test/local -e html,js,mjs test/local/server.mjs",
+  "test:install": "cd test/cloudflare ; npm i ; cd ../.. ; cd test/vercel ; npm i ; cd ../.."
  },
  "keywords": [
   "key",

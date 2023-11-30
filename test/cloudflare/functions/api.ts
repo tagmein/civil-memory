@@ -45,8 +45,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
 
  const value = await kv.get(key)
 
- console.log('CM GET', env.DATA_KV, JSON.stringify({ key, value }))
-
  return new Response(value) as unknown as CWResponse
 }
 
@@ -62,8 +60,6 @@ export const onRequestDelete: PagesFunction<Env> = async ({ env, request }) => {
  })
 
  await kv.delete(key)
-
- console.log('CM DELETE', env.DATA_KV, JSON.stringify({ key }))
 
  return new Response() as unknown as CWResponse
 }
@@ -91,8 +87,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ env, request }) => {
  }
 
  await kv.set(key, value)
-
- console.log('CM PUT', env.DATA_KV, JSON.stringify({ key, value }))
 
  return new Response() as unknown as CWResponse
 }

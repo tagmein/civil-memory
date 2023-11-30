@@ -62,8 +62,7 @@ function cloudflareKV(_a) {
         set: function (key, value) {
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
-                    binding.put(key, value);
-                    return [2 /*return*/];
+                    return [2 /*return*/, binding.put(key, value)];
                 });
             });
         },

@@ -14,7 +14,7 @@ export function cloudflareKV({
    return binding.get(key)
   },
   async set(key, value) {
-   binding.put(key, value)
+   return binding.put(key, value)
   },
  }
 }
