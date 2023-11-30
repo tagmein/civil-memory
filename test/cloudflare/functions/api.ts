@@ -9,6 +9,12 @@ interface Env {
  DATA_KV: KVNamespace
 }
 
+if (!('process' in globalThis)) {
+ globalThis.process = {
+  env: {},
+ } as NodeJS.Process
+}
+
 const TEST_REQUEST_KEYS = ['mykey', 'mynamespace#mykey']
 const TEST_REQUEST_BODY = 'myvalue'
 
