@@ -1,2 +1,1 @@
 compatibility_flags = [ "nodejs_compat" ]
-externals = ["@cloudflare/workers-types", "@tagmein/civil-memory" ]
