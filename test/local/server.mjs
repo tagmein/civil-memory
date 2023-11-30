@@ -1,10 +1,10 @@
-import http from 'http'
-import { dirname, join } from 'path'
-import querystring from 'querystring'
+import http from 'node:http'
+import { dirname, join } from 'node:path'
+import querystring from 'node:querystring'
+import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises'
 
-import { civilMemoryKV } from '../dist/index.js'
+import { civilMemoryKV } from '../../dist/index.js'
 import { collectRequestBody } from './collectRequestBody.mjs'
-import { readFile } from 'fs/promises'
 
 const DEFAULT_PORT = 3333
 
@@ -25,6 +25,7 @@ async function main() {
 
  const diskKV = civilMemoryKV.disk({
   rootDir: STORAGE_DIR,
+  fsPromises: { mkdir, readFile, unlink, writeFile },
  })
  const volatileKV = civilMemoryKV.volatile()
 

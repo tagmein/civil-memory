@@ -1,20 +1,31 @@
-import { mkdir, readFile, stat, unlink, writeFile } from 'node:fs/promises'
+import type { mkdir, stat, unlink, writeFile } from 'node:fs/promises'
 
 import { CivilMemoryObjects } from '..'
 import { join } from 'node:path'
-import { createReadStream, ReadStream } from 'node:fs'
+import type { createReadStream, ReadStream } from 'node:fs'
 
 export interface CivilMemoryDiskObjectsOptions {
  rootDir: string
+ fs: {
+  createReadStream: typeof createReadStream
+ }
+ fsPromises: {
+  mkdir: typeof mkdir
+  stat: typeof stat
+  unlink: typeof unlink
+  writeFile: typeof writeFile
+ }
 }
 
 export function diskObjects({
  rootDir,
+ fs,
+ fsPromises,
 }: CivilMemoryDiskObjectsOptions): CivilMemoryObjects {
  let isInitialized = false
  async function diskPath(namespace: string, key: string) {
   const namespaceDirPath = join(rootDir, encodeURIComponent(namespace))
-  await mkdir(namespaceDirPath, {
+  await fsPromises.mkdir(namespaceDirPath, {
    recursive: true,
    // todo cache our knowledge that the directory
    // exists for performance enhancement here
@@ -27,20 +38,20 @@ export function diskObjects({
   async delete(key: string) {
    const namespace = key.split('#')[0]
    try {
-    await unlink(await diskPath(namespace, key))
+    await fsPromises.unlink(await diskPath(namespace, key))
    } catch (e) {}
   },
   async get(key: string) {
    const namespace = key.split('#')[0]
    try {
-    return createReadStream(await diskPath(namespace, key))
+    return fs.createReadStream(await diskPath(namespace, key))
    } catch (e) {
     return null
    }
   },
   async info(key: string) {
    const namespace = key.split('#')[0]
-   const fileStats = await stat(await diskPath(namespace, key))
+   const fileStats = await fsPromises.stat(await diskPath(namespace, key))
    return {
     createdAt: fileStats.birthtime,
     key,
@@ -49,7 +60,7 @@ export function diskObjects({
   },
   async put(key: string, value: ReadStream) {
    const namespace = key.split('#')[0]
-   await writeFile(await diskPath(namespace, key), value, 'utf8')
+   await fsPromises.writeFile(await diskPath(namespace, key), value, 'utf8')
   },
  }
 }
