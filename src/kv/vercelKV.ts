@@ -1,14 +1,13 @@
-import { createClient } from '@vercel/kv'
 import { CivilMemoryKV } from '..'
 
-export function vercelKV({
+export async function vercelKV({
  token,
  url,
 }: {
  token: string
  url: string
-}): CivilMemoryKV {
- const kv = createClient({
+}): Promise<CivilMemoryKV> {
+ const kv = (await import('@vercel/kv')).createClient({
   token,
   url,
  })

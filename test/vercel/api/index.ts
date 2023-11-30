@@ -18,7 +18,7 @@ export default async function (
   throw new Error('KV_REST_API_URL environment variable is missing')
  }
 
- const kv = civilMemoryKV.vercel({
+ const kv = await civilMemoryKV.vercel({
   url: KV_REST_API_URL,
   token: KV_REST_API_TOKEN,
  })
