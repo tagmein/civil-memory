@@ -37,9 +37,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.diskObjects = void 0;
-var promises_1 = require("fs/promises");
-var path_1 = require("path");
-var fs_1 = require("fs");
+var promises_1 = require("node:fs/promises");
+var node_path_1 = require("node:path");
+var node_fs_1 = require("node:fs");
 function diskObjects(_a) {
     var rootDir = _a.rootDir;
     var isInitialized = false;
@@ -49,7 +49,7 @@ function diskObjects(_a) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        namespaceDirPath = (0, path_1.join)(rootDir, encodeURIComponent(namespace));
+                        namespaceDirPath = (0, node_path_1.join)(rootDir, encodeURIComponent(namespace));
                         return [4 /*yield*/, (0, promises_1.mkdir)(namespaceDirPath, {
                                 recursive: true,
                                 // todo cache our knowledge that the directory
@@ -58,7 +58,7 @@ function diskObjects(_a) {
                     case 1:
                         _a.sent();
                         isInitialized = true;
-                        return [2 /*return*/, (0, path_1.join)(rootDir, encodeURIComponent(namespace), encodeURIComponent(key))];
+                        return [2 /*return*/, (0, node_path_1.join)(rootDir, encodeURIComponent(namespace), encodeURIComponent(key))];
                 }
             });
         });
@@ -98,7 +98,7 @@ function diskObjects(_a) {
                             _b.label = 1;
                         case 1:
                             _b.trys.push([1, 3, , 4]);
-                            _a = fs_1.createReadStream;
+                            _a = node_fs_1.createReadStream;
                             return [4 /*yield*/, diskPath(namespace, key)];
                         case 2: return [2 /*return*/, _a.apply(void 0, [_b.sent()])];
                         case 3:

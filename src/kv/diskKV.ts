@@ -1,7 +1,7 @@
-import { mkdir, readFile, unlink, writeFile } from 'fs/promises'
+import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises'
 
 import { CivilMemoryKV } from '..'
-import { join } from 'path'
+import { join } from 'node:path'
 
 export interface CivilMemoryDiskKVOptions {
  rootDir: string

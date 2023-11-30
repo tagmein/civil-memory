@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { ReadStream } from 'fs';
+import { ReadStream } from 'node:fs';
 import { cloudflareKV } from './kv/cloudflareKV';
 import { diskKV } from './kv/diskKV';
 import { vercelKV } from './kv/vercelKV';

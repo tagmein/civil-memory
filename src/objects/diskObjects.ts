@@ -1,8 +1,8 @@
-import { mkdir, readFile, stat, unlink, writeFile } from 'fs/promises'
+import { mkdir, readFile, stat, unlink, writeFile } from 'node:fs/promises'
 
 import { CivilMemoryObjects } from '..'
-import { join } from 'path'
-import { createReadStream, ReadStream } from 'fs'
+import { join } from 'node:path'
+import { createReadStream, ReadStream } from 'node:fs'
 
 export interface CivilMemoryDiskObjectsOptions {
  rootDir: string

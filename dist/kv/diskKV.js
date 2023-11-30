@@ -37,8 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.diskKV = void 0;
-var promises_1 = require("fs/promises");
-var path_1 = require("path");
+var promises_1 = require("node:fs/promises");
+var node_path_1 = require("node:path");
 function diskKV(_a) {
     var rootDir = _a.rootDir;
     var isInitialized = false;
@@ -48,7 +48,7 @@ function diskKV(_a) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        namespaceDirPath = (0, path_1.join)(rootDir, encodeURIComponent(namespace));
+                        namespaceDirPath = (0, node_path_1.join)(rootDir, encodeURIComponent(namespace));
                         return [4 /*yield*/, (0, promises_1.mkdir)(namespaceDirPath, {
                                 recursive: true,
                                 // todo cache our knowledge that the directory
@@ -57,7 +57,7 @@ function diskKV(_a) {
                     case 1:
                         _a.sent();
                         isInitialized = true;
-                        return [2 /*return*/, (0, path_1.join)(rootDir, encodeURIComponent(namespace), encodeURIComponent(key))];
+                        return [2 /*return*/, (0, node_path_1.join)(rootDir, encodeURIComponent(namespace), encodeURIComponent(key))];
                 }
             });
         });
