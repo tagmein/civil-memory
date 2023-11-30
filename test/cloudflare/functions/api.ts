@@ -1,4 +1,8 @@
-import { KVNamespace, PagesFunction, Response } from '@cloudflare/workers-types'
+import type {
+ KVNamespace,
+ PagesFunction,
+ Response as CWResponse,
+} from '@cloudflare/workers-types'
 import { civilMemoryKV } from '@tagmein/civil-memory'
 
 interface Env {
@@ -8,14 +12,14 @@ interface Env {
 const TEST_REQUEST_KEYS = ['mykey', 'mynamespace#mykey']
 const TEST_REQUEST_BODY = 'myvalue'
 
-function validateKey(key: string | string[]): string | Response {
+function validateKey(key: string | string[]): string | CWResponse {
  if (typeof key !== 'string') {
   return new Response(
    JSON.stringify({
     error: 'key parameter must be a string',
    }),
    { status: 400 }
-  )
+  ) as unknown as CWResponse
  }
  if (!TEST_REQUEST_KEYS.includes(key)) {
   return new Response(
@@ -23,7 +27,7 @@ function validateKey(key: string | string[]): string | Response {
     error: `key parameter must be one of ${JSON.stringify(TEST_REQUEST_KEYS)}`,
    }),
    { status: 400 }
-  )
+  ) as unknown as CWResponse
  }
  return key
 }
@@ -40,7 +44,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, params }) => {
 
  const value = await kv.get(key)
 
- return new Response(value)
+ return new Response(value) as unknown as CWResponse
 }
 
 export const onRequestDelete: PagesFunction<Env> = async ({ env, params }) => {
@@ -55,7 +59,7 @@ export const onRequestDelete: PagesFunction<Env> = async ({ env, params }) => {
 
  await kv.delete(key)
 
- return new Response()
+ return new Response() as unknown as CWResponse
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({
@@ -80,10 +84,10 @@ export const onRequestPost: PagesFunction<Env> = async ({
     error: `request body must be ${JSON.stringify(TEST_REQUEST_BODY)}`,
    }),
    { status: 400 }
-  )
+  ) as unknown as CWResponse
  }
 
  await kv.set(key, value)
 
- return new Response()
+ return new Response() as unknown as CWResponse
 }
