@@ -19,7 +19,7 @@ export async function vercelKV({
    return kv.get(key)
   },
   async set(key, value) {
-   kv.set(key, value)
+   await kv.set(key, value)
   },
  }
 }

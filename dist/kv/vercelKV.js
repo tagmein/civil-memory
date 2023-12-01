@@ -72,8 +72,12 @@ function vercelKV(_a) {
                             set: function (key, value) {
                                 return __awaiter(this, void 0, void 0, function () {
                                     return __generator(this, function (_a) {
-                                        kv.set(key, value);
-                                        return [2 /*return*/];
+                                        switch (_a.label) {
+                                            case 0: return [4 /*yield*/, kv.set(key, value)];
+                                            case 1:
+                                                _a.sent();
+                                                return [2 /*return*/];
+                                        }
                                     });
                                 });
                             },

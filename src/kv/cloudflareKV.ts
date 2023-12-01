@@ -7,13 +7,13 @@ export function cloudflareKV({
  binding: KVNamespace
 }): CivilMemoryKV {
  return {
-  async delete(key) {
-   await binding.delete(key)
+  delete(key) {
+   return binding.delete(key)
   },
-  async get(key) {
+  get(key) {
    return binding.get(key)
   },
-  async set(key, value) {
+  set(key, value) {
    return binding.put(key, value)
   },
  }
