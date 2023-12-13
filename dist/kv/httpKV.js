@@ -49,9 +49,15 @@ function httpKV(_a) {
                             url = new URL(baseUrl);
                             url.searchParams.set('key', key);
                             finalUrl = url.toString();
-                            return [4 /*yield*/, fetch(finalUrl)];
+                            return [4 /*yield*/, fetch(finalUrl)
+                                // treat not found as null
+                            ];
                         case 1:
                             resp = _a.sent();
+                            // treat not found as null
+                            if (resp.status === 404) {
+                                return [2 /*return*/, null];
+                            }
                             if (!resp.ok) {
                                 throw new Error("GET ".concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText));
                             }

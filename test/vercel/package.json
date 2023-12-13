@@ -9,6 +9,6 @@
   "@vercel/node": "^3.0.11"
  },
  "dependencies": {
-  "@tagmein/civil-memory": "^0.0.11"
+  "@tagmein/civil-memory": "^0.0.12"
  }
 }
