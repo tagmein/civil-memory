@@ -30,16 +30,26 @@ async function main() {
  })
  const volatileKV = civilMemoryKV.volatile()
 
- function getKVByMode(mode) {
+ function getKVByMode(mode, params) {
   switch (mode) {
    case 'disk':
     return diskKV
+   case 'http':
+    const httpUrl = params.url
+    if (typeof httpUrl !== 'string') {
+     const err = new Error(`parameter url must be specified for 'http' mode`)
+     err.statusCode = 400
+     throw err
+    }
+    return civilMemoryKV.http(httpUrl)
    case 'volatile':
     return volatileKV
    default:
-    throw new Error(
-     'parameter mode must be one of: cloudflare, disk, vercel, volatile'
+    const err = new Error(
+     'parameter mode must be one of: cloudflare, disk, http, vercel, volatile'
     )
+    err.statusCode = 400
+    throw err
   }
  }
 
@@ -53,7 +63,7 @@ async function main() {
    console.log(request.method, requestPath, JSON.stringify(requestParams))
    switch (request.method) {
     case 'DELETE': {
-     const kv = getKVByMode(requestParams.mode)
+     const kv = getKVByMode(requestParams.mode, requestParams)
      if (typeof requestParams.key !== 'string') {
       response.statusCode = 400
       response.end(JSON.stringify({ error: 'request parameter key missing' }))
@@ -76,7 +86,7 @@ async function main() {
       response.end(faviconIco)
       return
      }
-     const kv = getKVByMode(requestParams.mode)
+     const kv = getKVByMode(requestParams.mode, requestParams)
      if (typeof requestParams.key !== 'string') {
       response.statusCode = 400
       response.end(JSON.stringify({ error: 'request parameter key missing' }))
@@ -87,7 +97,7 @@ async function main() {
      return
     }
     case 'POST': {
-     const kv = getKVByMode(requestParams.mode)
+     const kv = getKVByMode(requestParams.mode, requestParams)
      if (typeof requestParams.key !== 'string') {
       response.statusCode = 400
       response.end(JSON.stringify({ error: 'request parameter key missing' }))

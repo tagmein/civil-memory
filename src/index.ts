@@ -1,6 +1,7 @@
 import type { ReadStream } from 'node:fs'
 import { cloudflareKV } from './kv/cloudflareKV'
 import { diskKV } from './kv/diskKV'
+import { httpKV } from './kv/httpKV'
 import { vercelKV } from './kv/vercelKV'
 import { volatileKV } from './kv/volatileKV'
 import { cloudflareObjects } from './objects/cloudflareObjects'
@@ -30,6 +31,7 @@ export interface CivilMemoryObjects {
 export const civilMemoryKV = {
  cloudflare: cloudflareKV,
  disk: diskKV,
+ http: httpKV,
  vercel: vercelKV,
  volatile: volatileKV,
 }

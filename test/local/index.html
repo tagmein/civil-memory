@@ -8,17 +8,52 @@
     color: white;
     padding: 0 15px;
    }
+   .mode-select {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    height: 42px;
+    align-items: center;
+    gap: 4px;
+   }
+   .mode-select input[type='text'] {
+    background-color: #80808080;
+    border: 1px solid #ffffff80;
+    color: #ffffffc0;
+    flex-grow: 1;
+    padding: 4px;
+    font-family: inherit;
+    font-size: inherit;
+   }
+   *::selection {
+    background-color: #fff;
+    color: #000;
+   }
+   *:focus {
+    box-shadow: inset 0 0 1px 1px #fff, 0 0 1px #fff;
+    outline: none;
+   }
   </style>
  </head>
  <body>
   <h1>Civil Memory Test Page</h1>
 
   <h2>Modes</h2>
-  <div>
+  <div class="mode-select">
    <input type="checkbox" id="disk" checked />
    <label for="disk">disk</label>
   </div>
-  <div>
+  <div class="mode-select">
+   <input type="checkbox" id="http" checked />
+   <label for="http">http with url</label>
+   <input
+    id="http-url"
+    placeholder="http://localhost:3333?mode=volatile"
+    type="text"
+    value="http://localhost:3333?mode=volatile"
+   />
+  </div>
+  <div class="mode-select">
    <input type="checkbox" id="volatile" checked />
    <label for="volatile">volatile</label>
   </div>
@@ -79,9 +114,11 @@
     const results = document.getElementById('results')
     results.textContent = ''
 
-    const testModes = ['disk', 'volatile'].filter(
+    const testModes = ['disk', 'http', 'volatile'].filter(
      (mode) => document.getElementById(mode).checked
     )
+
+    const httpUrl = document.getElementById('http-url')
 
     for (let mode of testModes) {
      let modePass = 0
@@ -109,16 +146,20 @@
       }
      }
 
-     results.textContent += `Running tests for '${mode}' mode\n`
-
+     results.textContent += `Running tests for '${mode}' mode ${
+      mode === 'http' ? ` with url: '${httpUrl.value}'` : ''
+     }\n`
      const value = 'myvalue'
+
+     const httpUrlParam =
+      mode === 'http' ? `&url=${encodeURIComponent(httpUrl.value)}` : ''
 
      for (const key of ['mykey', 'mynamespace#mykey']) {
       const k = JSON.stringify(key)
 
       await runTest(`Delete key ${k} to reset`, async () => {
        const resp = await fetch(
-        `/?mode=${mode}&key=${encodeURIComponent(key)}`,
+        `/?mode=${mode}&key=${encodeURIComponent(key)}${httpUrlParam}`,
         {
          method: 'DELETE',
         }
@@ -128,14 +169,16 @@
       })
 
       await runTest(`Get after delete ${k} should be empty`, async () => {
-       const resp = await fetch(`/?mode=${mode}&key=${encodeURIComponent(key)}`)
+       const resp = await fetch(
+        `/?mode=${mode}&key=${encodeURIComponent(key)}${httpUrlParam}`
+       )
 
        return expect(resp).toBeOk().toBeEmpty()
       })
 
       await runTest(`Post value to ${k}`, async () => {
        const resp = await fetch(
-        `/?mode=${mode}&key=${encodeURIComponent(key)}`,
+        `/?mode=${mode}&key=${encodeURIComponent(key)}${httpUrlParam}`,
         {
          method: 'POST',
          body: value,
@@ -146,14 +189,16 @@
       })
 
       await runTest(`Get value of ${k} after post`, async () => {
-       const resp = await fetch(`/?mode=${mode}&key=${encodeURIComponent(key)}`)
+       const resp = await fetch(
+        `/?mode=${mode}&key=${encodeURIComponent(key)}${httpUrlParam}`
+       )
 
        return expect(resp).toBeOk().toEqual(value)
       })
 
       await runTest(`Delete key ${k} to clean up`, async () => {
        const resp = await fetch(
-        `/?mode=${mode}&key=${encodeURIComponent(key)}`,
+        `/?mode=${mode}&key=${encodeURIComponent(key)}${httpUrlParam}`,
         {
          method: 'DELETE',
         }
