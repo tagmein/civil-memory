@@ -21,17 +21,73 @@ npm install --save @tagmein/civil-memory
 
 1. **`volatile`** &mdash; stores items in the Node process memory with a limit of 64Kib for key-value values and a limit of 5MiB for objects. No information is written to disk and as such it is permanently lost when the server process exits.
 
+   >
+
+   ```TypeScript
+   const kv = civilMemoryKV.volatile()
+   ```
+
 2. **`disk`** &mdash; stores data in a file and folder structure with no size limits except for the limits of the available hard disk space on your computer.
 
-3. **`cloudflare`** &mdash; [Cloudflare Workers KV](https://developers.cloudflare.com/kv) with a limit of 25MiB for key-value values and [Cloudflare R2](https://developers.cloudflare.com/r2) with a limit of 315MiB for objects. Note that this mode is only usable within a Cloudflare worker as Cloudflare Workers KV cannot be accessed externally.
+   >
 
-See Cloudflare test suite from the `test/cloudflare` directory running here: https://civil-memory.pages.dev/
+   ```TypeScript
+   const kv = civilMemoryKV.disk({
+    rootDir: '/path/to/storage/directory'
+   })
+   ```
 
-4. **`vercel`** &mdash; [Vercel KV](https://vercel.com/storage/kv) with a limit of 100MiB for key-value values and [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) with a limit of 500 MiB for objects.
+3. **`http`** &mdash; proxies KV requests to any compatible KV HTTP server. The specification is as follows:
 
-See Vercel test suite from the `test/vercel` directory running here: https://civil-memory.vercel.app/
+   >
 
-5. **_`more`_** &mdash; to request a new backing store, open a pull request, even if there is no code, and it will be considered.
+   ```
+   Read a value:
+   GET <baseUrl>?key=<key>
+
+   Delete a value:
+   DELETE <baseUrl>?key=<key>
+
+   Set a value:
+   POST <baseUrl>?key=<key> with value as request body
+   ```
+
+   >
+
+   ```TypeScript
+   const kv = civilMemoryKV.http({
+    baseUrl: 'https://my-domain.com/my-kv?foo=bar'
+   })
+   ```
+
+4. **`cloudflare`** &mdash; [Cloudflare Workers KV](https://developers.cloudflare.com/kv) with a limit of 25MiB for key-value values and [Cloudflare R2](https://developers.cloudflare.com/r2) with a limit of 315MiB for objects. Note that this mode is only usable within a Cloudflare worker as Cloudflare Workers KV cannot be accessed externally.
+
+   > See Cloudflare test suite from the `test/cloudflare` directory running here: https://civil-memory.pages.dev/
+
+   >
+
+   ```TypeScript
+   // see https://developers.cloudflare.com/kv/learning/kv-bindings/
+   const kv = civilMemoryKV.cloudflare({
+    binding: env.MY_BINDING_NAME
+   })
+   ```
+
+5. **`vercel`** &mdash; [Vercel KV](https://vercel.com/storage/kv) with a limit of 100MiB for key-value values and [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) with a limit of 500 MiB for objects.
+
+   > See Vercel test suite from the `test/vercel` directory running here: https://civil-memory.vercel.app/
+
+   >
+
+   ```TypeScript
+   // see https://vercel.com/docs/storage/vercel-kv/quickstart
+   const kv = await civilMemoryKV.vercel({
+    token: process.env.KV_REST_API_TOKEN,
+    url: process.env.KV_REST_API_URL,
+   })
+   ```
+
+6. **_`more`_** &mdash; to request a new backing store, open a pull request, even if there is no code, and it will be considered.
 
 ## KV Usage
 
@@ -46,24 +102,8 @@ Both the `namespace` and the `key` should be URL-encoded to prevent unencoded `#
 ```TypeScript
 import { civilMemoryKV } from '@tagmein/civil-memory'
 
-// create a kv client - pick one
-
-const kv = civilMemoryKV.volatile()
-
-const kv = civilMemoryKV.disk({
- rootDir: '/path/to/storage/directory'
-})
-
-// see https://developers.cloudflare.com/kv/learning/kv-bindings/
-const kv = civilMemoryKV.cloudflare({
- binding: env.MY_BINDING_NAME
-})
-
-// see https://vercel.com/docs/storage/vercel-kv/quickstart
-const kv = await civilMemoryKV.vercel({
- token: process.env.KV_REST_API_TOKEN,
- url: process.env.KV_REST_API_URL,
-})
+// create a kv client - pick one from the 'Supported backing stores' section above
+const kv = civilMemoryKV.<mode>(...)
 
 // use the kv client to ...
 
@@ -80,37 +120,4 @@ await kv.delete('temperature')
 
 ## Objects Usage
 
-```TypeScript
-import { civilMemoryObjects } from '@tagmein/civil-memory'
-
-// create an objects client - pick one
-
-const objects = civilMemoryObjects.volatile()
-
-const objects = civilMemoryObjects.disk({
- rootDir: '/path/to/storage/directory'
-})
-
-// see https://developers.cloudflare.com/kv/learning/kv-bindings/
-const objects = civilMemoryObjects.cloudflare({
- binding: env.MY_BINDING_NAME
-})
-
-// see https://vercel.com/docs/storage/vercel-kv/quickstart
-const objects = civilMemoryObjects.vercel({
- url: process.env.MY_KV_REST_API_URL,
- token: process.env.MY_KV_REST_API_TOKEN,
-})
-
-// use the objects client to ...
-
-// ... read a value
-const temperature = await objects.get('temperature')
-console.log({ temperature })
-
-// ... write a value
-await objects.set('temperature', '40.5')
-
-// ... remove a value
-await objects.delete('temperature')
-```
+_**Civil Memory Objects** is not yet released, check back later or contribute by opening a pull request._

@@ -41,7 +41,7 @@ async function main() {
      err.statusCode = 400
      throw err
     }
-    return civilMemoryKV.http(httpUrl)
+    return civilMemoryKV.http({ baseUrl: httpUrl })
    case 'volatile':
     return volatileKV
    default:
