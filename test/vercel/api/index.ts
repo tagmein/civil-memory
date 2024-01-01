@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { civilMemoryKV } from '@tagmein/civil-memory'
 
 const TEST_REQUEST_KEYS = ['mykey', 'mynamespace#mykey']
-const TEST_REQUEST_BODY = 'myvalue'
+const TEST_REQUEST_BODY = JSON.stringify({ example: 'myvalue' })
 
 export default async function (
  request: VercelRequest,

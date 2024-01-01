@@ -54,7 +54,7 @@ async function main() {
  }
 
  const TEST_REQUEST_KEYS = ['mykey', 'mynamespace#mykey']
- const TEST_REQUEST_BODY = 'myvalue'
+ const TEST_REQUEST_BODY = JSON.stringify({ example: 'myvalue' })
 
  const httpServer = http.createServer(async function (request, response) {
   try {

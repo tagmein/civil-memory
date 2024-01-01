@@ -10,7 +10,7 @@ interface Env {
 }
 
 const TEST_REQUEST_KEYS = ['mykey', 'mynamespace#mykey']
-const TEST_REQUEST_BODY = 'myvalue'
+const TEST_REQUEST_BODY = JSON.stringify({ example: 'myvalue' })
 
 function validateKey(key: string | null): string | CWResponse {
  if (typeof key !== 'string') {
