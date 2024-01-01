@@ -149,7 +149,7 @@
      results.textContent += `Running tests for '${mode}' mode ${
       mode === 'http' ? ` with url: '${httpUrl.value}'` : ''
      }\n`
-     const value = 'myvalue'
+     const value = JSON.stringify({ example: 'myvalue' })
 
      const httpUrlParam =
       mode === 'http' ? `&url=${encodeURIComponent(httpUrl.value)}` : ''

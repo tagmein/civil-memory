@@ -107,7 +107,7 @@
 
      results.textContent += `Running tests for '${mode}' mode\n`
 
-     const value = 'myvalue'
+     const value = JSON.stringify({ example: 'myvalue' })
 
      for (const key of ['mykey', 'mynamespace#mykey']) {
       const k = JSON.stringify(key)
