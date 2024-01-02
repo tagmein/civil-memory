@@ -41,7 +41,7 @@ export default async function (
 
  if (request.method === 'GET') {
   const value = await kv.get(key)
-  return response.status(200).send(value)
+  return response.status(200).send(typeof value + value)
  }
 
  if (request.method === 'DELETE') {
