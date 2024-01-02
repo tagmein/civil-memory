@@ -170,21 +170,22 @@
       const testFile = new File(['hello world'], 'test.txt')
       const baseUrl = '/objects?mode=vercel'
 
-      await runTest(`Delete ${key} to reset`, async () => {
-       const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
-        method: 'DELETE',
+      for (const key of ['mykey', 'mynamespace#mykey']) {
+       const k = JSON.stringify(key)
+
+       await runTest(`Delete ${k} to reset`, async () => {
+        const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
+         method: 'DELETE',
+        })
+        return expect(resp).toBeOk()
        })
-       return expect(resp).toBeOk()
-      })
 
-      await runTest(`Get ${key} after put should be empty`, async () => {
-       const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`)
-       return expect(resp).toBeOk().toBeEmpty()
-      })
+       await runTest(`Get ${k} after put should be empty`, async () => {
+        const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`)
+        return expect(resp).toBeOk().toBeEmpty()
+       })
 
-      await runTest(
-       `Get info after delete ${key} should be empty`,
-       async () => {
+       await runTest(`Get info after delete ${k} should be empty`, async () => {
         const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
          method: 'HEAD',
         })
@@ -193,41 +194,41 @@
          size: 0,
          createdAt: '1970-01-01T00:00:00.000Z',
         })
-       }
-      )
-
-      await runTest(`Put test file to ${key}`, async () => {
-       const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
-        method: 'PUT',
-        body: testFile,
        })
-       return expect(resp).toBeOk()
-      })
 
-      await runTest(`Get ${key} after put`, async () => {
-       const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`)
-       return expect(resp).toBeOk().toEqual('hello world')
-      })
-
-      await runTest(`Get info after put ${key}`, async () => {
-       const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
-        method: 'HEAD',
-       })
-       return expect(resp)
-        .toBeOk()
-        .toEqual({
-         key,
-         size: 11,
-         createdAt: expect.any(String),
+       await runTest(`Put test file to ${k}`, async () => {
+        const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
+         method: 'PUT',
+         body: testFile,
         })
-      })
-
-      await runTest(`Delete ${key} to clean up`, async () => {
-       const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
-        method: 'DELETE',
+        return expect(resp).toBeOk()
        })
-       return expect(resp).toBeOk()
-      })
+
+       await runTest(`Get ${k} after put`, async () => {
+        const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`)
+        return expect(resp).toBeOk().toEqual('hello world')
+       })
+
+       await runTest(`Get info after put ${k}`, async () => {
+        const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
+         method: 'HEAD',
+        })
+        return expect(resp)
+         .toBeOk()
+         .toEqual({
+          key,
+          size: 11,
+          createdAt: expect.any(String),
+         })
+       })
+
+       await runTest(`Delete ${k} to clean up`, async () => {
+        const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
+         method: 'DELETE',
+        })
+        return expect(resp).toBeOk()
+       })
+      }
      }
 
      // Print summary
