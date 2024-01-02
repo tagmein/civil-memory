@@ -15,8 +15,12 @@
 
   <h2>Modes</h2>
   <div>
-   <input type="checkbox" id="vercel" checked />
-   <label for="vercel">vercel</label>
+   <input type="checkbox" id="vercel-kv" checked />
+   <label for="vercel-kv">vercel-kv</label>
+  </div>
+  <div>
+   <input type="checkbox" id="vercel-objects" checked />
+   <label for="vercel-objects">vercel-objects</label>
   </div>
 
   <p>
@@ -75,7 +79,7 @@
     const results = document.getElementById('results')
     results.textContent = ''
 
-    const testModes = ['vercel'].filter(
+    const testModes = ['vercel-kv', 'vercel-objects'].filter(
      (mode) => document.getElementById(mode).checked
     )
 
@@ -108,57 +112,112 @@
      results.textContent += `Running tests for '${mode}' mode\n`
 
      const value = JSON.stringify({ example: 'myvalue' })
+     if (mode.endsWith('-kv')) {
+      for (const key of ['mykey', 'mynamespace#mykey']) {
+       const k = JSON.stringify(key)
 
-     for (const key of ['mykey', 'mynamespace#mykey']) {
-      const k = JSON.stringify(key)
+       await runTest(`Delete key ${k} to reset`, async () => {
+        const resp = await fetch(
+         `/api?mode=${mode}&key=${encodeURIComponent(key)}`,
+         {
+          method: 'DELETE',
+         }
+        )
 
-      await runTest(`Delete key ${k} to reset`, async () => {
-       const resp = await fetch(
-        `/api?mode=${mode}&key=${encodeURIComponent(key)}`,
-        {
-         method: 'DELETE',
-        }
-       )
+        return expect(resp).toBeOk()
+       })
 
+       await runTest(`Get after delete ${k} should be empty`, async () => {
+        const resp = await fetch(
+         `/api?mode=${mode}&key=${encodeURIComponent(key)}`
+        )
+
+        return expect(resp).toBeOk().toBeEmpty()
+       })
+
+       await runTest(`Post value to ${k}`, async () => {
+        const resp = await fetch(
+         `/api?mode=${mode}&key=${encodeURIComponent(key)}`,
+         {
+          method: 'POST',
+          body: value,
+         }
+        )
+
+        return expect(resp).toBeOk()
+       })
+
+       await runTest(`Get value of ${k} after post`, async () => {
+        const resp = await fetch(
+         `/api?mode=${mode}&key=${encodeURIComponent(key)}`
+        )
+
+        return expect(resp).toBeOk().toEqual(value)
+       })
+
+       await runTest(`Delete key ${k} to clean up`, async () => {
+        const resp = await fetch(
+         `/api?mode=${mode}&key=${encodeURIComponent(key)}`,
+         {
+          method: 'DELETE',
+         }
+        )
+
+        return expect(resp).toBeOk()
+       })
+      }
+     } else if (mode.endsWith('-objects')) {
+      const testFile = new File(['hello world'], 'test.txt')
+      const baseUrl = '/objects?mode=vercel'
+
+      await runTest(`Delete ${key} to reset`, async () => {
+       const resp = await fetch(`${baseUrl}&key=${key}`, { method: 'DELETE' })
        return expect(resp).toBeOk()
       })
 
-      await runTest(`Get after delete ${k} should be empty`, async () => {
-       const resp = await fetch(
-        `/api?mode=${mode}&key=${encodeURIComponent(key)}`
-       )
-
+      await runTest(`Get ${key} after put should be empty`, async () => {
+       const resp = await fetch(`${baseUrl}&key=${key}`)
        return expect(resp).toBeOk().toBeEmpty()
       })
 
-      await runTest(`Post value to ${k}`, async () => {
-       const resp = await fetch(
-        `/api?mode=${mode}&key=${encodeURIComponent(key)}`,
-        {
-         method: 'POST',
-         body: value,
-        }
-       )
+      await runTest(
+       `Get info after delete ${key} should be empty`,
+       async () => {
+        const resp = await fetch(`${baseUrl}&key=${key}`, { method: 'HEAD' })
+        return expect(resp).toBeOk().toEqual({
+         key,
+         size: 0,
+         createdAt: '1970-01-01T00:00:00.000Z',
+        })
+       }
+      )
 
+      await runTest(`Put test file to ${key}`, async () => {
+       const resp = await fetch(`${baseUrl}&key=${key}`, {
+        method: 'PUT',
+        body: testFile,
+       })
        return expect(resp).toBeOk()
       })
 
-      await runTest(`Get value of ${k} after post`, async () => {
-       const resp = await fetch(
-        `/api?mode=${mode}&key=${encodeURIComponent(key)}`
-       )
-
-       return expect(resp).toBeOk().toEqual(value)
+      await runTest(`Get ${key} after put`, async () => {
+       const resp = await fetch(`${baseUrl}&key=${key}`)
+       return expect(resp).toBeOk().toEqual('hello world')
       })
 
-      await runTest(`Delete key ${k} to clean up`, async () => {
-       const resp = await fetch(
-        `/api?mode=${mode}&key=${encodeURIComponent(key)}`,
-        {
-         method: 'DELETE',
-        }
-       )
+      await runTest(`Get info after put ${key}`, async () => {
+       const resp = await fetch(`${baseUrl}&key=${key}`, { method: 'HEAD' })
+       return expect(resp)
+        .toBeOk()
+        .toEqual({
+         key,
+         size: 11,
+         createdAt: expect.any(String),
+        })
+      })
 
+      await runTest(`Delete ${key} to clean up`, async () => {
+       const resp = await fetch(`${baseUrl}&key=${key}`, { method: 'DELETE' })
        return expect(resp).toBeOk()
       })
      }

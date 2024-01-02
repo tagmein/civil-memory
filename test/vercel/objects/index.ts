@@ -27,9 +27,29 @@ export default async function (req: VercelRequest, res: VercelResponse) {
   return res.status(400).end(`key must be a string`)
  }
 
+ if (req.method === 'HEAD') {
+  const info = await objects.info(key)
+  return res.status(200).json(info)
+ }
+
  if (req.method === 'GET') {
   const stream = await objects.get(key)
-  return stream.pipe(res)
+  return new Promise<void>((resolve, reject) => {
+   stream.pipeTo(
+    new WritableStream({
+     write(chunk) {
+      res.write(chunk)
+     },
+     close() {
+      res.end()
+      resolve()
+     },
+     abort(err) {
+      reject(err)
+     },
+    })
+   )
+  })
  }
 
  if (req.method === 'PUT') {
