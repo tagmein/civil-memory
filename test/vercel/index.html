@@ -118,7 +118,7 @@
 
        await runTest(`Delete key ${k} to reset`, async () => {
         const resp = await fetch(
-         `/api?mode=${mode}&key=${encodeURIComponent(key)}`,
+         `/api?mode=vercel&key=${encodeURIComponent(key)}`,
          {
           method: 'DELETE',
          }
@@ -129,7 +129,7 @@
 
        await runTest(`Get after delete ${k} should be empty`, async () => {
         const resp = await fetch(
-         `/api?mode=${mode}&key=${encodeURIComponent(key)}`
+         `/api?mode=vercel&key=${encodeURIComponent(key)}`
         )
 
         return expect(resp).toBeOk().toBeEmpty()
@@ -137,7 +137,7 @@
 
        await runTest(`Post value to ${k}`, async () => {
         const resp = await fetch(
-         `/api?mode=${mode}&key=${encodeURIComponent(key)}`,
+         `/api?mode=vercel&key=${encodeURIComponent(key)}`,
          {
           method: 'POST',
           body: value,
@@ -149,7 +149,7 @@
 
        await runTest(`Get value of ${k} after post`, async () => {
         const resp = await fetch(
-         `/api?mode=${mode}&key=${encodeURIComponent(key)}`
+         `/api?mode=vercel&key=${encodeURIComponent(key)}`
         )
 
         return expect(resp).toBeOk().toEqual(value)
@@ -157,7 +157,7 @@
 
        await runTest(`Delete key ${k} to clean up`, async () => {
         const resp = await fetch(
-         `/api?mode=${mode}&key=${encodeURIComponent(key)}`,
+         `/api?mode=vercel&key=${encodeURIComponent(key)}`,
          {
           method: 'DELETE',
          }
@@ -171,19 +171,23 @@
       const baseUrl = '/objects?mode=vercel'
 
       await runTest(`Delete ${key} to reset`, async () => {
-       const resp = await fetch(`${baseUrl}&key=${key}`, { method: 'DELETE' })
+       const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
+        method: 'DELETE',
+       })
        return expect(resp).toBeOk()
       })
 
       await runTest(`Get ${key} after put should be empty`, async () => {
-       const resp = await fetch(`${baseUrl}&key=${key}`)
+       const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`)
        return expect(resp).toBeOk().toBeEmpty()
       })
 
       await runTest(
        `Get info after delete ${key} should be empty`,
        async () => {
-        const resp = await fetch(`${baseUrl}&key=${key}`, { method: 'HEAD' })
+        const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
+         method: 'HEAD',
+        })
         return expect(resp).toBeOk().toEqual({
          key,
          size: 0,
@@ -193,7 +197,7 @@
       )
 
       await runTest(`Put test file to ${key}`, async () => {
-       const resp = await fetch(`${baseUrl}&key=${key}`, {
+       const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
         method: 'PUT',
         body: testFile,
        })
@@ -201,12 +205,14 @@
       })
 
       await runTest(`Get ${key} after put`, async () => {
-       const resp = await fetch(`${baseUrl}&key=${key}`)
+       const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`)
        return expect(resp).toBeOk().toEqual('hello world')
       })
 
       await runTest(`Get info after put ${key}`, async () => {
-       const resp = await fetch(`${baseUrl}&key=${key}`, { method: 'HEAD' })
+       const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
+        method: 'HEAD',
+       })
        return expect(resp)
         .toBeOk()
         .toEqual({
@@ -217,7 +223,9 @@
       })
 
       await runTest(`Delete ${key} to clean up`, async () => {
-       const resp = await fetch(`${baseUrl}&key=${key}`, { method: 'DELETE' })
+       const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
+        method: 'DELETE',
+       })
        return expect(resp).toBeOk()
       })
      }
