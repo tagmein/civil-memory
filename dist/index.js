@@ -9,7 +9,6 @@ var volatileKV_1 = require("./kv/volatileKV");
 var cloudflareObjects_1 = require("./objects/cloudflareObjects");
 var diskObjects_1 = require("./objects/diskObjects");
 var vercelObjects_1 = require("./objects/vercelObjects");
-var volatileObjects_1 = require("./objects/volatileObjects");
 exports.civilMemoryKV = {
     cloudflare: cloudflareKV_1.cloudflareKV,
     disk: diskKV_1.diskKV,
@@ -21,5 +20,4 @@ exports.civilMemoryObjects = {
     cloudflare: cloudflareObjects_1.cloudflareObjects,
     disk: diskObjects_1.diskObjects,
     vercel: vercelObjects_1.vercelObjects,
-    volatile: volatileObjects_1.volatileObjects,
 };

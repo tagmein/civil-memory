@@ -1,19 +1,19 @@
-import type { mkdir, stat, unlink, writeFile } from 'node:fs/promises'
+import type { createReadStream, createWriteStream } from 'node:fs'
+import type { mkdir, stat, unlink } from 'node:fs/promises'
 import type { join } from 'node:path'
 
 import { CivilMemoryObjects } from '..'
-import type { createReadStream, ReadStream } from 'node:fs'
 
 export interface CivilMemoryDiskObjectsOptions {
  rootDir: string
  fs: {
   createReadStream: typeof createReadStream
+  createWriteStream: typeof createWriteStream
  }
  fsPromises: {
   mkdir: typeof mkdir
   stat: typeof stat
   unlink: typeof unlink
-  writeFile: typeof writeFile
  }
  path: { join: typeof join }
 }
@@ -50,7 +50,14 @@ export function diskObjects({
   async get(key: string) {
    const namespace = key.split('#')[0]
    try {
-    return fs.createReadStream(await diskPath(namespace, key))
+    const stream = fs.createReadStream(await diskPath(namespace, key))
+    return new ReadableStream({
+     start(controller) {
+      stream.on('data', (chunk) => controller.enqueue(chunk))
+      stream.on('end', () => controller.close())
+      stream.on('error', (err) => controller.error(err))
+     },
+    })
    } catch (e) {
     return null
    }
@@ -64,9 +71,20 @@ export function diskObjects({
     size: fileStats.size,
    }
   },
-  async put(key: string, value: ReadStream) {
+  async put(key: string, value: ReadableStream) {
    const namespace = key.split('#')[0]
-   await fsPromises.writeFile(await diskPath(namespace, key), value, 'utf8')
+   const fileName = await diskPath(namespace, key)
+   const reader = value.getReader()
+   const fileStream = fs.createWriteStream(fileName)
+   try {
+    while (true) {
+     const { done, value } = await reader.read()
+     if (done) break
+     fileStream.write(value)
+    }
+   } finally {
+    fileStream.end()
+   }
   },
  }
 }

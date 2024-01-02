@@ -87,7 +87,7 @@ function diskObjects(_a) {
         },
         get: function (key) {
             return __awaiter(this, void 0, void 0, function () {
-                var namespace, _a, _b, e_2;
+                var namespace, stream_1, _a, _b, e_2;
                 return __generator(this, function (_c) {
                     switch (_c.label) {
                         case 0:
@@ -97,7 +97,15 @@ function diskObjects(_a) {
                             _c.trys.push([1, 3, , 4]);
                             _b = (_a = fs).createReadStream;
                             return [4 /*yield*/, diskPath(namespace, key)];
-                        case 2: return [2 /*return*/, _b.apply(_a, [_c.sent()])];
+                        case 2:
+                            stream_1 = _b.apply(_a, [_c.sent()]);
+                            return [2 /*return*/, new ReadableStream({
+                                    start: function (controller) {
+                                        stream_1.on('data', function (chunk) { return controller.enqueue(chunk); });
+                                        stream_1.on('end', function () { return controller.close(); });
+                                        stream_1.on('error', function (err) { return controller.error(err); });
+                                    },
+                                })];
                         case 3:
                             e_2 = _c.sent();
                             return [2 /*return*/, null];
@@ -129,17 +137,34 @@ function diskObjects(_a) {
         },
         put: function (key, value) {
             return __awaiter(this, void 0, void 0, function () {
-                var namespace, _a, _b;
-                return __generator(this, function (_c) {
-                    switch (_c.label) {
+                var namespace, fileName, reader, fileStream, _a, done, value_1;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
                         case 0:
                             namespace = key.split('#')[0];
-                            _b = (_a = fsPromises).writeFile;
                             return [4 /*yield*/, diskPath(namespace, key)];
-                        case 1: return [4 /*yield*/, _b.apply(_a, [_c.sent(), value, 'utf8'])];
+                        case 1:
+                            fileName = _b.sent();
+                            reader = value.getReader();
+                            fileStream = fs.createWriteStream(fileName);
+                            _b.label = 2;
                         case 2:
-                            _c.sent();
-                            return [2 /*return*/];
+                            _b.trys.push([2, , 6, 7]);
+                            _b.label = 3;
+                        case 3:
+                            if (!true) return [3 /*break*/, 5];
+                            return [4 /*yield*/, reader.read()];
+                        case 4:
+                            _a = _b.sent(), done = _a.done, value_1 = _a.value;
+                            if (done)
+                                return [3 /*break*/, 5];
+                            fileStream.write(value_1);
+                            return [3 /*break*/, 3];
+                        case 5: return [3 /*break*/, 7];
+                        case 6:
+                            fileStream.end();
+                            return [7 /*endfinally*/];
+                        case 7: return [2 /*return*/];
                     }
                 });
             });
