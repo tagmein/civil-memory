@@ -10,11 +10,18 @@ export async function vercelObjects({
  const objects = await import('@vercel/blob')
  return {
   async delete(key) {
-   await objects.del(key, { token })
+   try {
+    await objects.del(key, { token })
+   } catch (e) {
+    console.warn(e)
+   }
   },
 
   async get(key) {
    const response = await fetch(`${url}/${key}`)
+   if (!response.ok) {
+    return null
+   }
    return response.body
   },
 

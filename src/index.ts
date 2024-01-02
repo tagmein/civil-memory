@@ -21,9 +21,9 @@ export interface CivilMemoryObjectsObjectInfo {
 
 export interface CivilMemoryObjects {
  delete(key: string): Promise<void>
- get(key: string): Promise<ReadableStream>
+ get(key: string): Promise<null | ReadableStream<Uint8Array>>
  info(key: string): Promise<CivilMemoryObjectsObjectInfo>
- put(key: string, value: ReadableStream): Promise<void>
+ put(key: string, value: ReadableStream<Uint8Array>): Promise<void>
  // signedUrlGet(key: string, expiresIn: number): Promise<string>
  // signedUrlPut(key: string, expiresIn: number): Promise<string>
 }
