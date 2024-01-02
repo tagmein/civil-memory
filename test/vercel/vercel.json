@@ -3,6 +3,10 @@
   "api/index.ts": {
    "memory": 1024,
    "maxDuration": 5
+  },
+  "objects/index.ts": {
+   "memory": 1024,
+   "maxDuration": 5
   }
  }
 }
