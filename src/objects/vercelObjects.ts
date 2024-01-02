@@ -10,7 +10,7 @@ export async function vercelObjects({
  const objects = await import('@vercel/blob')
  return {
   async delete(key) {
-   await objects.del(`${url}/${key}`, { token })
+   await objects.del(key, { token })
   },
 
   async get(key) {
@@ -19,7 +19,7 @@ export async function vercelObjects({
   },
 
   async info(key) {
-   const info = await objects.head(`${url}/${key}`, {
+   const info = await objects.head(key, {
     token,
    })
    return {
@@ -30,7 +30,7 @@ export async function vercelObjects({
   },
 
   async put(key, value) {
-   await objects.put(`${url}/${key}`, value, {
+   await objects.put(key, value, {
     access: 'public',
     token,
    })
