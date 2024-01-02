@@ -168,7 +168,7 @@
       }
      } else if (mode.endsWith('-objects')) {
       const testFile = new File(['hello world'], 'test.txt')
-      const baseUrl = '/objects?mode=vercel'
+      const baseUrl = '/api/objects?mode=vercel'
 
       for (const key of ['mykey', 'mynamespace#mykey']) {
        const k = JSON.stringify(key)
