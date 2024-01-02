@@ -31,6 +31,19 @@
   <pre id="results">Ready to start tests</pre>
 
   <script>
+   function contains(subject, expected) {
+    for (const key in expected) {
+     if (!subject.hasOwnProperty(key)) {
+      return false
+     }
+
+     if (subject[key] !== expected[key]) {
+      return false
+     }
+    }
+
+    return true
+   }
    // Assertion helper
    function expect(result) {
     const assertions = {
@@ -65,6 +78,18 @@
       this.message = `Expected ${JSON.stringify(
        expectedValue
       )} but got ${JSON.stringify(text)}`
+      return this
+     },
+
+     async toContainJSON(expectedValue) {
+      if (this.passed === false) {
+       return this
+      }
+      const json = await result.json()
+      this.passed = result.ok && contains(json, expectedValue)
+      this.message = `Expected ${JSON.stringify(
+       expectedValue
+      )} but got ${JSON.stringify(json)}`
       return this
      },
     }
@@ -180,7 +205,7 @@
         return expect(resp).toBeOk()
        })
 
-       await runTest(`Get ${k} after put should be empty`, async () => {
+       await runTest(`Get ${k} after delete should be empty`, async () => {
         const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`)
         return expect(resp).toBeOk().toBeEmpty()
        })
@@ -189,11 +214,15 @@
         const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
          method: 'HEAD',
         })
-        return expect(resp).toBeOk().toEqual({
-         key,
-         size: 0,
-         createdAt: '1970-01-01T00:00:00.000Z',
-        })
+        return expect(resp)
+         .toBeOk()
+         .toEqual(
+          JSON.stringify({
+           key,
+           size: 0,
+           createdAt: '1970-01-01T00:00:00.000Z',
+          })
+         )
        })
 
        await runTest(`Put test file to ${k}`, async () => {
@@ -213,13 +242,10 @@
         const resp = await fetch(`${baseUrl}&key=${encodeURIComponent(key)}`, {
          method: 'HEAD',
         })
-        return expect(resp)
-         .toBeOk()
-         .toEqual({
-          key,
-          size: 11,
-          createdAt: expect.any(String),
-         })
+        return expect(resp).toBeOk().toContainJSON({
+         key,
+         size: 11,
+        })
        })
 
        await runTest(`Delete ${k} to clean up`, async () => {

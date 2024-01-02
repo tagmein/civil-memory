@@ -27,6 +27,11 @@ export default async function (req: VercelRequest, res: VercelResponse) {
   return res.status(400).end(`key must be a string`)
  }
 
+ if (req.method === 'DELETE') {
+  await objects.delete(key)
+  return res.status(200).end()
+ }
+
  if (req.method === 'HEAD') {
   const info = await objects.info(key)
   return res.status(200).json(info)
