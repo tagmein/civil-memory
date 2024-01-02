@@ -4,7 +4,7 @@
    "memory": 1024,
    "maxDuration": 5
   },
-  "objects/index.ts": {
+  "api/objects.ts": {
    "memory": 1024,
    "maxDuration": 5
   }
