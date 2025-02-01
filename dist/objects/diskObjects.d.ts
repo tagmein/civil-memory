@@ -1,6 +1,3 @@
-/// <reference types="node" />
-/// <reference types="node" />
-/// <reference types="node" />
 import type { createReadStream, createWriteStream } from 'node:fs';
 import type { mkdir, stat, unlink } from 'node:fs/promises';
 import type { join } from 'node:path';
