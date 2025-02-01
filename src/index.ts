@@ -28,16 +28,18 @@ export interface CivilMemoryObjects {
  // signedUrlPut(key: string, expiresIn: number): Promise<string>
 }
 
+type Named<T, N extends string> = T & { name: N }
+
 export const civilMemoryKV = {
- cloudflare: cloudflareKV,
- disk: diskKV,
- http: httpKV,
- vercel: vercelKV,
- volatile: volatileKV,
+ cloudflare: cloudflareKV as Named<typeof cloudflareKV, 'cloudflare'>,
+ disk: diskKV as Named<typeof diskKV, 'disk'>,
+ http: httpKV as Named<typeof httpKV, 'http'>,
+ vercel: vercelKV as Named<typeof vercelKV, 'vercel'>,
+ volatile: volatileKV as Named<typeof volatileKV, 'volatile'>,
 }
 
 export const civilMemoryObjects = {
- cloudflare: cloudflareObjects,
- disk: diskObjects,
- vercel: vercelObjects,
+ cloudflare: cloudflareObjects as Named<typeof cloudflareObjects, 'cloudflare'>,
+ disk: diskObjects as Named<typeof diskObjects, 'disk'>,
+ vercel: vercelObjects as Named<typeof vercelObjects, 'vercel'>,
 }

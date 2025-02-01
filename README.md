@@ -118,6 +118,43 @@ await kv.set('temperature', '40.5')
 await kv.delete('temperature')
 ```
 
+### Run a Civil Memory http server kv client
+
+```sh
+node test/local/server.mjs
+```
+
+#### Example output
+
+```
+Test suite ready at http://localhost:3333
+
+Valid values for the mode parameter:
+ • disk
+ • volatile
+
+All API operations:
+
+ • Read value at key
+   GET ?mode=disk&key=urlEncodedKey
+
+ • Delete value at key
+   DELETE ?mode=disk&key=urlEncodedKey
+
+ • Write value at key
+   POST ?mode=disk&key=urlEncodedKey <body>
+```
+
+Now, to create a client that connects to the server, you can do the following:
+
+```TypeScript
+const kv = civilMemoryKV.http({
+ baseUrl: 'http://localhost:3333?mode=disk&modeOptions.disk.basePath=./my-kv-store'
+})
+```
+
+The Civil Memory http client allows you to use KV in environments that do not support the other modes, like edge functions, in a browser, or other environment that doesn't have a file system available.
+
 ## Objects Usage
 
 _**Civil Memory Objects** is not yet released, check back later or contribute by opening a pull request._

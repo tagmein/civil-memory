@@ -42,7 +42,7 @@ function httpKV(_a) {
     return {
         get: function (key) {
             return __awaiter(this, void 0, void 0, function () {
-                var url, finalUrl, resp;
+                var url, finalUrl, resp, responseText;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -58,17 +58,19 @@ function httpKV(_a) {
                             if (resp.status === 404) {
                                 return [2 /*return*/, null];
                             }
-                            if (!resp.ok) {
-                                throw new Error("GET ".concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText));
-                            }
-                            return [2 /*return*/, resp.text()];
+                            if (!!resp.ok) return [3 /*break*/, 3];
+                            return [4 /*yield*/, resp.text()];
+                        case 2:
+                            responseText = _a.sent();
+                            throw new Error("GET ".concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText, ": ").concat(responseText));
+                        case 3: return [2 /*return*/, resp.text()];
                     }
                 });
             });
         },
         set: function (key, value) {
             return __awaiter(this, void 0, void 0, function () {
-                var url, finalUrl, method, resp;
+                var url, finalUrl, method, resp, responseText;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -82,17 +84,19 @@ function httpKV(_a) {
                                 })];
                         case 1:
                             resp = _a.sent();
-                            if (!resp.ok) {
-                                throw new Error("".concat(method, " ").concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText));
-                            }
-                            return [2 /*return*/];
+                            if (!!resp.ok) return [3 /*break*/, 3];
+                            return [4 /*yield*/, resp.text()];
+                        case 2:
+                            responseText = _a.sent();
+                            throw new Error("".concat(method, " ").concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText, ": ").concat(responseText));
+                        case 3: return [2 /*return*/];
                     }
                 });
             });
         },
         delete: function (key) {
             return __awaiter(this, void 0, void 0, function () {
-                var url, finalUrl, method, resp;
+                var url, finalUrl, method, resp, responseText;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -103,10 +107,12 @@ function httpKV(_a) {
                             return [4 /*yield*/, fetch(finalUrl, { method: method })];
                         case 1:
                             resp = _a.sent();
-                            if (!resp.ok) {
-                                throw new Error("".concat(method, " ").concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText));
-                            }
-                            return [2 /*return*/];
+                            if (!!resp.ok) return [3 /*break*/, 3];
+                            return [4 /*yield*/, resp.text()];
+                        case 2:
+                            responseText = _a.sent();
+                            throw new Error("".concat(method, " ").concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText, ": ").concat(responseText));
+                        case 3: return [2 /*return*/];
                     }
                 });
             });

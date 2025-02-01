@@ -53,7 +53,13 @@ export function diskObjects({
     const stream = fs.createReadStream(await diskPath(namespace, key))
     return new ReadableStream({
      start(controller) {
-      stream.on('data', (chunk) => controller.enqueue(chunk))
+      stream.on('data', (chunk) =>
+       controller.enqueue(
+        chunk instanceof Buffer
+         ? new Uint8Array(chunk)
+         : new Uint8Array(Buffer.from(chunk))
+       )
+      )
       stream.on('end', () => controller.close())
       stream.on('error', (err) => controller.error(err))
      },

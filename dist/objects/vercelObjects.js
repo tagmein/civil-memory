@@ -49,12 +49,20 @@ function vercelObjects(_a) {
                     return [2 /*return*/, {
                             delete: function (key) {
                                 return __awaiter(this, void 0, void 0, function () {
+                                    var e_1;
                                     return __generator(this, function (_a) {
                                         switch (_a.label) {
-                                            case 0: return [4 /*yield*/, objects.del(key, { token: token })];
+                                            case 0:
+                                                _a.trys.push([0, 2, , 3]);
+                                                return [4 /*yield*/, objects.del(key, { token: token })];
                                             case 1:
                                                 _a.sent();
-                                                return [2 /*return*/];
+                                                return [3 /*break*/, 3];
+                                            case 2:
+                                                e_1 = _a.sent();
+                                                console.warn(e_1);
+                                                return [3 /*break*/, 3];
+                                            case 3: return [2 /*return*/];
                                         }
                                     });
                                 });
@@ -67,6 +75,9 @@ function vercelObjects(_a) {
                                             case 0: return [4 /*yield*/, fetch("".concat(url, "/").concat(key))];
                                             case 1:
                                                 response = _a.sent();
+                                                if (!response.ok) {
+                                                    return [2 /*return*/, null];
+                                                }
                                                 return [2 /*return*/, response.body];
                                         }
                                     });

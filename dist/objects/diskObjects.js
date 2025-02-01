@@ -101,7 +101,11 @@ function diskObjects(_a) {
                             stream_1 = _b.apply(_a, [_c.sent()]);
                             return [2 /*return*/, new ReadableStream({
                                     start: function (controller) {
-                                        stream_1.on('data', function (chunk) { return controller.enqueue(chunk); });
+                                        stream_1.on('data', function (chunk) {
+                                            return controller.enqueue(chunk instanceof Buffer
+                                                ? new Uint8Array(chunk)
+                                                : new Uint8Array(Buffer.from(chunk)));
+                                        });
                                         stream_1.on('end', function () { return controller.close(); });
                                         stream_1.on('error', function (err) { return controller.error(err); });
                                     },

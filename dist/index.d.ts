@@ -18,19 +18,23 @@ export interface CivilMemoryObjectsObjectInfo {
 }
 export interface CivilMemoryObjects {
     delete(key: string): Promise<void>;
-    get(key: string): Promise<ReadableStream>;
+    get(key: string): Promise<null | ReadableStream<Uint8Array>>;
     info(key: string): Promise<CivilMemoryObjectsObjectInfo>;
-    put(key: string, value: ReadableStream): Promise<void>;
+    put(key: string, value: ReadableStream<Uint8Array>): Promise<void>;
 }
+type Named<T, N extends string> = T & {
+    name: N;
+};
 export declare const civilMemoryKV: {
-    cloudflare: typeof cloudflareKV;
-    disk: typeof diskKV;
-    http: typeof httpKV;
-    vercel: typeof vercelKV;
-    volatile: typeof volatileKV;
+    cloudflare: Named<typeof cloudflareKV, "cloudflare">;
+    disk: Named<typeof diskKV, "disk">;
+    http: Named<typeof httpKV, "http">;
+    vercel: Named<typeof vercelKV, "vercel">;
+    volatile: Named<typeof volatileKV, "volatile">;
 };
 export declare const civilMemoryObjects: {
-    cloudflare: typeof cloudflareObjects;
-    disk: typeof diskObjects;
-    vercel: typeof vercelObjects;
+    cloudflare: Named<typeof cloudflareObjects, "cloudflare">;
+    disk: Named<typeof diskObjects, "disk">;
+    vercel: Named<typeof vercelObjects, "vercel">;
 };
+export {};

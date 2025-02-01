@@ -14,7 +14,10 @@ export function httpKV({ baseUrl }: { baseUrl: string }): CivilMemoryKV {
    }
 
    if (!resp.ok) {
-    throw new Error(`GET ${finalUrl}: HTTP ${resp.status}: ${resp.statusText}`)
+    const responseText = await resp.text()
+    throw new Error(
+     `GET ${finalUrl}: HTTP ${resp.status}: ${resp.statusText}: ${responseText}`
+    )
    }
 
    return resp.text()
@@ -31,8 +34,9 @@ export function httpKV({ baseUrl }: { baseUrl: string }): CivilMemoryKV {
    })
 
    if (!resp.ok) {
+    const responseText = await resp.text()
     throw new Error(
-     `${method} ${finalUrl}: HTTP ${resp.status}: ${resp.statusText}`
+     `${method} ${finalUrl}: HTTP ${resp.status}: ${resp.statusText}: ${responseText}`
     )
    }
   },
@@ -45,8 +49,9 @@ export function httpKV({ baseUrl }: { baseUrl: string }): CivilMemoryKV {
    const resp = await fetch(finalUrl, { method })
 
    if (!resp.ok) {
+    const responseText = await resp.text()
     throw new Error(
-     `${method} ${finalUrl}: HTTP ${resp.status}: ${resp.statusText}`
+     `${method} ${finalUrl}: HTTP ${resp.status}: ${resp.statusText}: ${responseText}`
     )
    }
   },
