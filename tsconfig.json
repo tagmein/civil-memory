@@ -2,7 +2,8 @@
  "compilerOptions": {
   "declaration": true,
   "outDir": "./dist",
-  "rootDir": "./src"
+  "rootDir": "./src",
+  "lib": ["DOM", "ESNext"]
  },
  "exclude": ["dist", "test"]
 }

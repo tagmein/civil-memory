@@ -1,5 +1,3 @@
-/// <reference types="node" />
-/// <reference types="node" />
 import type { mkdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import type { join } from 'node:path';
 import { CivilMemoryKV } from '..';

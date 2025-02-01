@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -36,13 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.httpKV = void 0;
+exports.httpKV = httpKV;
 function httpKV(_a) {
     var baseUrl = _a.baseUrl;
     return {
         get: function (key) {
             return __awaiter(this, void 0, void 0, function () {
-                var url, finalUrl, resp;
+                var url, finalUrl, resp, responseText;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -58,17 +58,19 @@ function httpKV(_a) {
                             if (resp.status === 404) {
                                 return [2 /*return*/, null];
                             }
-                            if (!resp.ok) {
-                                throw new Error("GET ".concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText));
-                            }
-                            return [2 /*return*/, resp.text()];
+                            if (!!resp.ok) return [3 /*break*/, 3];
+                            return [4 /*yield*/, resp.text()];
+                        case 2:
+                            responseText = _a.sent();
+                            throw new Error("GET ".concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText, ": ").concat(responseText));
+                        case 3: return [2 /*return*/, resp.text()];
                     }
                 });
             });
         },
         set: function (key, value) {
             return __awaiter(this, void 0, void 0, function () {
-                var url, finalUrl, method, resp;
+                var url, finalUrl, method, resp, responseText;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -82,17 +84,19 @@ function httpKV(_a) {
                                 })];
                         case 1:
                             resp = _a.sent();
-                            if (!resp.ok) {
-                                throw new Error("".concat(method, " ").concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText));
-                            }
-                            return [2 /*return*/];
+                            if (!!resp.ok) return [3 /*break*/, 3];
+                            return [4 /*yield*/, resp.text()];
+                        case 2:
+                            responseText = _a.sent();
+                            throw new Error("".concat(method, " ").concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText, ": ").concat(responseText));
+                        case 3: return [2 /*return*/];
                     }
                 });
             });
         },
         delete: function (key) {
             return __awaiter(this, void 0, void 0, function () {
-                var url, finalUrl, method, resp;
+                var url, finalUrl, method, resp, responseText;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0:
@@ -103,14 +107,15 @@ function httpKV(_a) {
                             return [4 /*yield*/, fetch(finalUrl, { method: method })];
                         case 1:
                             resp = _a.sent();
-                            if (!resp.ok) {
-                                throw new Error("".concat(method, " ").concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText));
-                            }
-                            return [2 /*return*/];
+                            if (!!resp.ok) return [3 /*break*/, 3];
+                            return [4 /*yield*/, resp.text()];
+                        case 2:
+                            responseText = _a.sent();
+                            throw new Error("".concat(method, " ").concat(finalUrl, ": HTTP ").concat(resp.status, ": ").concat(resp.statusText, ": ").concat(responseText));
+                        case 3: return [2 /*return*/];
                     }
                 });
             });
         },
     };
 }
-exports.httpKV = httpKV;

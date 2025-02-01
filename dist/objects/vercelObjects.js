@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
     function verb(n) { return function (v) { return step([n, v]); }; }
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
@@ -36,25 +36,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.vercelObjects = void 0;
+exports.vercelObjects = vercelObjects;
 function vercelObjects(_a) {
-    var token = _a.token, url = _a.url;
-    return __awaiter(this, void 0, void 0, function () {
+    return __awaiter(this, arguments, void 0, function (_b) {
         var objects;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var token = _b.token, url = _b.url;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0: return [4 /*yield*/, Promise.resolve().then(function () { return require('@vercel/blob'); })];
                 case 1:
-                    objects = _b.sent();
+                    objects = _c.sent();
                     return [2 /*return*/, {
                             delete: function (key) {
                                 return __awaiter(this, void 0, void 0, function () {
+                                    var e_1;
                                     return __generator(this, function (_a) {
                                         switch (_a.label) {
-                                            case 0: return [4 /*yield*/, objects.del(key, { token: token })];
+                                            case 0:
+                                                _a.trys.push([0, 2, , 3]);
+                                                return [4 /*yield*/, objects.del(key, { token: token })];
                                             case 1:
                                                 _a.sent();
-                                                return [2 /*return*/];
+                                                return [3 /*break*/, 3];
+                                            case 2:
+                                                e_1 = _a.sent();
+                                                console.warn(e_1);
+                                                return [3 /*break*/, 3];
+                                            case 3: return [2 /*return*/];
                                         }
                                     });
                                 });
@@ -67,6 +75,9 @@ function vercelObjects(_a) {
                                             case 0: return [4 /*yield*/, fetch("".concat(url, "/").concat(key))];
                                             case 1:
                                                 response = _a.sent();
+                                                if (!response.ok) {
+                                                    return [2 /*return*/, null];
+                                                }
                                                 return [2 /*return*/, response.body];
                                         }
                                     });
@@ -111,4 +122,3 @@ function vercelObjects(_a) {
         });
     });
 }
-exports.vercelObjects = vercelObjects;

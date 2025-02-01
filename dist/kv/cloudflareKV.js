@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cloudflareKV = void 0;
+exports.cloudflareKV = cloudflareKV;
 function cloudflareKV(_a) {
     var binding = _a.binding;
     return {
@@ -15,4 +15,3 @@ function cloudflareKV(_a) {
         },
     };
 }
-exports.cloudflareKV = cloudflareKV;
