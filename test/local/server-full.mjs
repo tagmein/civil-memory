@@ -62,8 +62,31 @@ async function main() {
   }
  }
 
+ function setCorsHeaders(request, response) {
+  const requestOrigin = request.headers.origin
+  const allowedOrigin =
+   requestOrigin && requestOrigin.startsWith('http://localhost')
+    ? requestOrigin
+    : 'http://localhost:9090'
+
+  response.setHeader('Access-Control-Allow-Origin', allowedOrigin)
+  response.setHeader(
+   'Access-Control-Allow-Methods',
+   'GET, POST, DELETE, OPTIONS'
+  )
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+ }
+
  const httpServer = http.createServer(async function (request, response) {
   try {
+   setCorsHeaders(request, response)
+
+   if (request.method === 'OPTIONS') {
+    response.statusCode = 204
+    response.end()
+    return
+   }
+
    const [requestPath, requestParamString] = request.url.split('?')
    const requestParams = querystring.parse(requestParamString ?? '')
    console.log(request.method, requestPath, JSON.stringify(requestParams))
