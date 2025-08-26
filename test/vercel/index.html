@@ -143,7 +143,7 @@
 
        await runTest(`Delete key ${k} to reset`, async () => {
         const resp = await fetch(
-         `/api?mode=vercel&key=${encodeURIComponent(key)}`,
+         `/api?mode=redis&key=${encodeURIComponent(key)}`,
          {
           method: 'DELETE',
          }
@@ -154,7 +154,7 @@
 
        await runTest(`Get after delete ${k} should be empty`, async () => {
         const resp = await fetch(
-         `/api?mode=vercel&key=${encodeURIComponent(key)}`
+         `/api?mode=redis&key=${encodeURIComponent(key)}`
         )
 
         return expect(resp).toBeOk().toBeEmpty()
@@ -162,7 +162,7 @@
 
        await runTest(`Post value to ${k}`, async () => {
         const resp = await fetch(
-         `/api?mode=vercel&key=${encodeURIComponent(key)}`,
+         `/api?mode=redis&key=${encodeURIComponent(key)}`,
          {
           method: 'POST',
           body: value,
@@ -174,7 +174,7 @@
 
        await runTest(`Get value of ${k} after post`, async () => {
         const resp = await fetch(
-         `/api?mode=vercel&key=${encodeURIComponent(key)}`
+         `/api?mode=redis&key=${encodeURIComponent(key)}`
         )
 
         return expect(resp).toBeOk().toEqual(value)
@@ -182,7 +182,7 @@
 
        await runTest(`Delete key ${k} to clean up`, async () => {
         const resp = await fetch(
-         `/api?mode=vercel&key=${encodeURIComponent(key)}`,
+         `/api?mode=redis&key=${encodeURIComponent(key)}`,
          {
           method: 'DELETE',
          }
