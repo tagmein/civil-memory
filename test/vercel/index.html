@@ -137,7 +137,7 @@
      results.textContent += `Running tests for '${mode}' mode\n`
 
      const value = JSON.stringify({ example: 'myvalue' })
-     if (mode.endsWith('-kv')) {
+     if (mode === 'redis') {
       for (const key of ['mykey', 'mynamespace#mykey']) {
        const k = JSON.stringify(key)
 
@@ -191,7 +191,7 @@
         return expect(resp).toBeOk()
        })
       }
-     } else if (mode.endsWith('-objects')) {
+     } else if (mode === 'vercel-objects') {
       const testFile = new File(['hello world'], 'test.txt')
       const baseUrl = '/api/objects?mode=vercel'
 
