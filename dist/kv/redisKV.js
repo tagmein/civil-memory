@@ -6,7 +6,7 @@ async function redisKV({ url, }) {
     const kv = await (0, redis_1.createClient)({ url }).connect();
     return {
         async delete(key) {
-            await kv.getdel(key);
+            await kv.getDel(key);
         },
         async get(key) {
             return (await kv.get(key)).toString();

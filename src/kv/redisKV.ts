@@ -10,7 +10,7 @@ export async function redisKV({
  const kv = await createClient({ url }).connect()
  return {
   async delete(key) {
-   await kv.getdel(key)
+   await kv.getDel(key)
   },
   async get(key) {
    return (await kv.get(key)).toString()
