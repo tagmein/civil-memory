@@ -6,7 +6,7 @@
   "moduleResolution": "nodenext",
   "outDir": "./dist",
   "rootDir": "./src",
-  "target": "es2024",
+  "target": "esnext",
  },
  "exclude": ["dist", "test"]
 }
