@@ -15,11 +15,11 @@
 
   <h2>Modes</h2>
   <div>
-   <input type="checkbox" id="vercel-kv" checked />
-   <label for="vercel-kv">vercel-kv</label>
+   <input type="checkbox" id="redis" checked />
+   <label for="redis">redis</label>
   </div>
   <div>
-   <input type="checkbox" id="vercel-objects" checked />
+   <input disabled="disabled" type="checkbox" id="vercel-objects" />
    <label for="vercel-objects">vercel-objects</label>
   </div>
 
@@ -104,7 +104,7 @@
     const results = document.getElementById('results')
     results.textContent = ''
 
-    const testModes = ['vercel-kv', 'vercel-objects'].filter(
+    const testModes = ['redis', 'vercel-objects'].filter(
      (mode) => document.getElementById(mode).checked
     )
 

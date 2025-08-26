@@ -73,17 +73,16 @@ npm install --save @tagmein/civil-memory
    })
    ```
 
-5. **`vercel`** &mdash; [Vercel KV](https://vercel.com/storage/kv) with a limit of 100MiB for key-value values and [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) with a limit of 500 MiB for objects.
+5. **`redis`** &mdash; [Redis](https://vercel.com/docs/redis) with a limit of 100MiB for key-value values and [Vercel Blob](https://vercel.com/docs/storage/vercel-blob) with a limit of 500 MiB for objects.
 
-   > See Vercel test suite from the `test/vercel` directory running here: https://civil-memory.vercel.app/
+   > See redis test suite on Vercel from the `test/redis` directory running here: https://civil-memory.vercel.app/
 
    >
 
    ```TypeScript
-   // see https://vercel.com/docs/storage/vercel-kv/quickstart
+   // see https://vercel.com/docs/redis
    const kv = await civilMemoryKV.vercel({
-    token: process.env.KV_REST_API_TOKEN,
-    url: process.env.KV_REST_API_URL,
+    url: process.env.REDIS_URL,
    })
    ```
 
