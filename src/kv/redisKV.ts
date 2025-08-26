@@ -13,7 +13,11 @@ export async function redisKV({
    await kv.getDel(key)
   },
   async get(key) {
-   return (await kv.get(key)).toString()
+   const value = await kv.get(key)
+   if (value === null) {
+    return null
+   }
+   return value.toString()
   },
   async set(key, value) {
    await kv.set(key, value)
