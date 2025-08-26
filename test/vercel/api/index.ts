@@ -8,25 +8,20 @@ export default async function (
  request: VercelRequest,
  response: VercelResponse
 ) {
- const { KV_REST_API_URL, KV_REST_API_TOKEN } = process.env
+ const { REDIS_URL } = process.env
 
- if (typeof KV_REST_API_TOKEN !== 'string') {
-  throw new Error('KV_REST_API_TOKEN environment variable is missing')
+ if (typeof REDIS_URL !== 'string') {
+  throw new Error('REDIS_URL environment variable is missing')
  }
 
- if (typeof KV_REST_API_URL !== 'string') {
-  throw new Error('KV_REST_API_URL environment variable is missing')
- }
-
- const kv = await civilMemoryKV.vercel({
-  url: KV_REST_API_URL,
-  token: KV_REST_API_TOKEN,
+ const kv = await civilMemoryKV.redis({
+  url: REDIS_URL,
  })
 
  const { key, mode } = request.query
 
- if (mode !== 'vercel') {
-  return response.status(400).end(`mode parameter must be 'vercel'`)
+ if (mode !== 'redis') {
+  return response.status(400).end(`mode parameter must be 'redis'`)
  }
 
  if (typeof key !== 'string') {

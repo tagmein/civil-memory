@@ -1,16 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cloudflareKV = cloudflareKV;
-function cloudflareKV(_a) {
-    var binding = _a.binding;
+function cloudflareKV({ binding, }) {
     return {
-        delete: function (key) {
+        delete(key) {
             return binding.delete(key);
         },
-        get: function (key) {
+        get(key) {
             return binding.get(key);
         },
-        set: function (key, value) {
+        set(key, value) {
             return binding.put(key, value);
         },
     };

@@ -1,5 +1,4 @@
 import { CivilMemoryKV } from '..';
-export declare function vercelKV({ token, url, }: {
-    token: string;
+export declare function redisKV({ url, }: {
     url: string;
 }): Promise<CivilMemoryKV>;

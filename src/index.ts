@@ -1,7 +1,7 @@
 import { cloudflareKV } from './kv/cloudflareKV'
 import { diskKV } from './kv/diskKV'
 import { httpKV } from './kv/httpKV'
-import { vercelKV } from './kv/vercelKV'
+import { redisKV } from './kv/redisKV'
 import { volatileKV } from './kv/volatileKV'
 import { cloudflareObjects } from './objects/cloudflareObjects'
 import { diskObjects } from './objects/diskObjects'
@@ -34,7 +34,7 @@ export const civilMemoryKV = {
  cloudflare: cloudflareKV as Named<typeof cloudflareKV, 'cloudflare'>,
  disk: diskKV as Named<typeof diskKV, 'disk'>,
  http: httpKV as Named<typeof httpKV, 'http'>,
- vercel: vercelKV as Named<typeof vercelKV, 'vercel'>,
+ redis: redisKV as Named<typeof redisKV, 'redis'>,
  volatile: volatileKV as Named<typeof volatileKV, 'volatile'>,
 }
 
