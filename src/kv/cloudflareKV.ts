@@ -18,3 +18,5 @@ export function cloudflareKV({
   },
  }
 }
+
+export type CloudflareKV = typeof cloudflareKV & { name: 'cloudflareKV' }

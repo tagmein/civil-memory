@@ -1,11 +1,11 @@
-import { cloudflareKV } from './kv/cloudflareKV';
-import { diskKV } from './kv/diskKV';
-import { httpKV } from './kv/httpKV';
-import { redisKV } from './kv/redisKV';
-import { volatileKV } from './kv/volatileKV';
-import { cloudflareObjects } from './objects/cloudflareObjects';
-import { diskObjects } from './objects/diskObjects';
-import { vercelObjects } from './objects/vercelObjects';
+import type { CloudflareKV } from './kv/cloudflareKV';
+import type { DiskKV } from './kv/diskKV';
+import type { HttpKV } from './kv/httpKV';
+import type { RedisKV } from './kv/redisKV';
+import type { VolatileKV } from './kv/volatileKV';
+import type { CloudflareObjects } from './objects/cloudflareObjects';
+import type { DiskObjects } from './objects/diskObjects';
+import type { VercelObjects } from './objects/vercelObjects';
 export interface CivilMemoryKV {
     delete(key: string): Promise<void>;
     get(key: string): Promise<string | null>;
@@ -22,19 +22,15 @@ export interface CivilMemoryObjects {
     info(key: string): Promise<CivilMemoryObjectsObjectInfo>;
     put(key: string, value: ReadableStream<Uint8Array>): Promise<void>;
 }
-type Named<T, N extends string> = T & {
-    name: N;
-};
 export declare const civilMemoryKV: {
-    cloudflare: Named<typeof cloudflareKV, "cloudflare">;
-    disk: Named<typeof diskKV, "disk">;
-    http: Named<typeof httpKV, "http">;
-    redis: Named<typeof redisKV, "redis">;
-    volatile: Named<typeof volatileKV, "volatile">;
+    readonly cloudflare: Promise<CloudflareKV>;
+    readonly disk: Promise<DiskKV>;
+    readonly http: Promise<HttpKV>;
+    readonly redis: Promise<RedisKV>;
+    readonly volatile: Promise<VolatileKV>;
 };
 export declare const civilMemoryObjects: {
-    cloudflare: Named<typeof cloudflareObjects, "cloudflare">;
-    disk: Named<typeof diskObjects, "disk">;
-    vercel: Named<typeof vercelObjects, "vercel">;
+    readonly cloudflare: Promise<CloudflareObjects>;
+    readonly disk: Promise<DiskObjects>;
+    readonly vercel: Promise<VercelObjects>;
 };
-export {};

@@ -18,3 +18,6 @@ export interface CivilMemoryDiskObjectsOptions {
     };
 }
 export declare function diskObjects({ rootDir, fs, fsPromises, path, }: CivilMemoryDiskObjectsOptions): CivilMemoryObjects;
+export type DiskObjects = typeof diskObjects & {
+    name: 'diskObjects';
+};

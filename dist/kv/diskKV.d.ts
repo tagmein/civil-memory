@@ -14,3 +14,6 @@ export interface CivilMemoryDiskKVOptions {
     };
 }
 export declare function diskKV({ rootDir, fsPromises, path, }: CivilMemoryDiskKVOptions): CivilMemoryKV;
+export type DiskKV = typeof diskKV & {
+    name: 'diskKV';
+};

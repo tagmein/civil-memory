@@ -94,3 +94,5 @@ export function diskObjects({
   },
  }
 }
+
+export type DiskObjects = typeof diskObjects & { name: 'diskObjects' }

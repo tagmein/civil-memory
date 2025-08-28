@@ -38,8 +38,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
  if (typeof key !== 'string') {
   return key
  }
-
- const kv = civilMemoryKV.cloudflare({
+ const kv = (await civilMemoryKV.cloudflare)({
   binding: env.DATA_KV,
  })
 

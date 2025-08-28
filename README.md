@@ -68,7 +68,8 @@ npm install --save @tagmein/civil-memory
 
    ```TypeScript
    // see https://developers.cloudflare.com/kv/learning/kv-bindings/
-   const kv = civilMemoryKV.cloudflare({
+   const cloudflareKv = await civilMemoryKV.cloudflare()
+   const kv = cloudflareKv({
     binding: env.MY_BINDING_NAME
    })
    ```
@@ -81,7 +82,8 @@ npm install --save @tagmein/civil-memory
 
    ```TypeScript
    // see https://vercel.com/docs/redis
-   const kv = await civilMemoryKV.vercel({
+   const redisKv = await civilMemoryKV.redis()
+   const kv = redisKv({
     url: process.env.REDIS_URL,
    })
    ```
@@ -102,7 +104,7 @@ Both the `namespace` and the `key` should be URL-encoded to prevent unencoded `#
 import { civilMemoryKV } from '@tagmein/civil-memory'
 
 // create a kv client - pick one from the 'Supported backing stores' section above
-const kv = civilMemoryKV.<mode>(...)
+const kv = (await civilMemoryKV.<mode>())(...)
 
 // use the kv client to ...
 
@@ -147,7 +149,7 @@ All API operations:
 Now, to create a client that connects to the server, you can do the following:
 
 ```TypeScript
-const kv = civilMemoryKV.http({
+const kv = (await civilMemoryKV.http())({
  baseUrl: 'http://localhost:3333?mode=disk&modeOptions.disk.basePath=./my-kv-store'
 })
 ```

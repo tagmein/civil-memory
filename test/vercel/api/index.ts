@@ -14,7 +14,7 @@ export default async function (
   throw new Error('REDIS_URL environment variable is missing')
  }
 
- const kv = await civilMemoryKV.redis({
+ const kv = (await civilMemoryKV.redis)({
   url: REDIS_URL,
  })
 

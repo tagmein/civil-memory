@@ -1,4 +1,7 @@
 import { CivilMemoryKV } from '..';
-export declare function redisKV({ url, }: {
+export declare function redisKV({ url }: {
     url: string;
-}): Promise<CivilMemoryKV>;
+}): CivilMemoryKV;
+export type RedisKV = typeof redisKV & {
+    name: 'redisKV';
+};

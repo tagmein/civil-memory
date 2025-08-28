@@ -43,3 +43,7 @@ export function cloudflareObjects({
   },
  }
 }
+
+export type CloudflareObjects = typeof cloudflareObjects & {
+ name: 'cloudflareObjects'
+}

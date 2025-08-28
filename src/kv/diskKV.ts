@@ -58,3 +58,5 @@ export function diskKV({
   },
  }
 }
+
+export type DiskKV = typeof diskKV & { name: 'diskKV' }

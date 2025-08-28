@@ -44,3 +44,5 @@ export async function vercelObjects({
   },
  }
 }
+
+export type VercelObjects = typeof vercelObjects & { name: 'vercelObjects' }

@@ -8,9 +8,9 @@ import { collectRequestBody } from './collectRequestBody.mjs'
 
 const ModeOptionsDiskBasePathParamName = 'modeOptions.disk.basePath'
 
-const modeDisk = civilMemoryKV.disk.name?.replace('KV', '')
-const modeHttp = civilMemoryKV.http.name?.replace('KV', '')
-const modeVolatile = civilMemoryKV.volatile.name?.replace('KV', '')
+const modeDisk = (await civilMemoryKV.disk).name?.replace('KV', '')
+const modeHttp = (await civilMemoryKV.http).name?.replace('KV', '')
+const modeVolatile = (await civilMemoryKV.volatile).name?.replace('KV', '')
 
 const DEFAULT_PORT = 3333
 
@@ -29,12 +29,12 @@ async function main() {
    ? portEnv
    : DEFAULT_PORT
 
- const volatileKV = civilMemoryKV.volatile()
+ const volatileKV = (await civilMemoryKV.volatile)()
 
- function getKVByMode(mode, params) {
+ async function getKVByMode(mode, params) {
   switch (mode) {
    case 'disk':
-    const diskKV = civilMemoryKV.disk({
+    const diskKV = (await civilMemoryKV.disk)({
      rootDir:
       ModeOptionsDiskBasePathParamName in params
        ? params[ModeOptionsDiskBasePathParamName]
@@ -50,7 +50,7 @@ async function main() {
      err.statusCode = 400
      throw err
     }
-    return civilMemoryKV.http({ baseUrl: httpUrl })
+    return (await civilMemoryKV.http)({ baseUrl: httpUrl })
    case 'volatile':
     return volatileKV
    default:
@@ -92,7 +92,7 @@ async function main() {
    console.log(request.method, requestPath, JSON.stringify(requestParams))
    switch (request.method) {
     case 'DELETE': {
-     const kv = getKVByMode(requestParams.mode, requestParams)
+     const kv = await getKVByMode(requestParams.mode, requestParams)
      if (typeof requestParams.key !== 'string') {
       response.statusCode = 400
       response.end(JSON.stringify({ error: 'request parameter key missing' }))
@@ -115,7 +115,7 @@ async function main() {
       response.end(faviconIco)
       return
      }
-     const kv = getKVByMode(requestParams.mode, requestParams)
+     const kv = await getKVByMode(requestParams.mode, requestParams)
      if (typeof requestParams.key !== 'string') {
       response.statusCode = 400
       response.end(JSON.stringify({ error: 'request parameter key missing' }))
@@ -126,7 +126,7 @@ async function main() {
      return
     }
     case 'POST': {
-     const kv = getKVByMode(requestParams.mode, requestParams)
+     const kv = await getKVByMode(requestParams.mode, requestParams)
      if (typeof requestParams.key !== 'string') {
       response.statusCode = 400
       response.end(JSON.stringify({ error: 'request parameter key missing' }))

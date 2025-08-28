@@ -3,3 +3,6 @@ import { CivilMemoryObjects } from '..';
 export declare function cloudflareObjects({ binding, }: {
     binding: R2Bucket;
 }): CivilMemoryObjects;
+export type CloudflareObjects = typeof cloudflareObjects & {
+    name: 'cloudflareObjects';
+};
