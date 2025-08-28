@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { civilMemoryKV } from '@tagmein/civil-memory'
+import { redisKV } from '@tagmein/civil-memory/dist/kv/redisKV'
 
 const TEST_REQUEST_KEYS = ['mykey', 'mynamespace#mykey']
 const TEST_REQUEST_BODY = JSON.stringify({ example: 'myvalue' })
@@ -14,7 +14,7 @@ export default async function (
   throw new Error('REDIS_URL environment variable is missing')
  }
 
- const kv = (await civilMemoryKV.redis)({
+ const kv = redisKV({
   url: REDIS_URL,
  })
 

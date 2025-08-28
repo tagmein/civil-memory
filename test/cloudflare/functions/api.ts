@@ -3,7 +3,7 @@ import type {
  PagesFunction,
  Response as CWResponse,
 } from '@cloudflare/workers-types'
-import { civilMemoryKV } from '@tagmein/civil-memory'
+import { cloudflareKV } from '@tagmein/civil-memory/dist/kv/cloudflareKV'
 
 interface Env {
  DATA_KV: KVNamespace
@@ -38,7 +38,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
  if (typeof key !== 'string') {
   return key
  }
- const kv = (await civilMemoryKV.cloudflare)({
+ const kv = cloudflareKV({
   binding: env.DATA_KV,
  })
 
@@ -54,7 +54,7 @@ export const onRequestDelete: PagesFunction<Env> = async ({ env, request }) => {
   return key
  }
 
- const kv = civilMemoryKV.cloudflare({
+ const kv = cloudflareKV({
   binding: env.DATA_KV,
  })
 
@@ -70,7 +70,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ env, request }) => {
   return key
  }
 
- const kv = civilMemoryKV.cloudflare({
+ const kv = cloudflareKV({
   binding: env.DATA_KV,
  })
 

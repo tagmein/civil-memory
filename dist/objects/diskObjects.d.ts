@@ -1,7 +1,7 @@
 import type { createReadStream, createWriteStream } from 'node:fs';
 import type { mkdir, stat, unlink } from 'node:fs/promises';
 import type { join } from 'node:path';
-import { CivilMemoryObjects } from '..';
+import { CivilMemoryObjects } from '../types';
 export interface CivilMemoryDiskObjectsOptions {
     rootDir: string;
     fs: {

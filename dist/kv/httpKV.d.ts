@@ -1,4 +1,4 @@
-import { CivilMemoryKV } from '..';
+import { CivilMemoryKV } from '../types';
 export declare function httpKV({ baseUrl }: {
     baseUrl: string;
 }): CivilMemoryKV;

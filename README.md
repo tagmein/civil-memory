@@ -24,7 +24,7 @@ npm install --save @tagmein/civil-memory
    >
 
    ```TypeScript
-   const kv = civilMemoryKV.volatile()
+   const kv = volatileKV()
    ```
 
 2. **`disk`** &mdash; stores data in a file and folder structure with no size limits except for the limits of the available hard disk space on your computer.
@@ -32,7 +32,7 @@ npm install --save @tagmein/civil-memory
    >
 
    ```TypeScript
-   const kv = civilMemoryKV.disk({
+   const kv = diskKV({
     rootDir: '/path/to/storage/directory'
    })
    ```
@@ -55,7 +55,7 @@ npm install --save @tagmein/civil-memory
    >
 
    ```TypeScript
-   const kv = civilMemoryKV.http({
+   const kv = httpKV({
     baseUrl: 'https://my-domain.com/my-kv?foo=bar'
    })
    ```
@@ -68,8 +68,7 @@ npm install --save @tagmein/civil-memory
 
    ```TypeScript
    // see https://developers.cloudflare.com/kv/learning/kv-bindings/
-   const cloudflareKv = await civilMemoryKV.cloudflare()
-   const kv = cloudflareKv({
+   const kv = cloudflareKV({
     binding: env.MY_BINDING_NAME
    })
    ```
@@ -82,8 +81,7 @@ npm install --save @tagmein/civil-memory
 
    ```TypeScript
    // see https://vercel.com/docs/redis
-   const redisKv = await civilMemoryKV.redis()
-   const kv = redisKv({
+   const kv = redisKV({
     url: process.env.REDIS_URL,
    })
    ```
@@ -101,10 +99,10 @@ The structure of keys is as follows:
 Both the `namespace` and the `key` should be URL-encoded to prevent unencoded `#` characters in them from interfering with the parsing of the key.
 
 ```TypeScript
-import { civilMemoryKV } from '@tagmein/civil-memory'
+import { volatileKV } from '@tagmein/civil-memory/dist/kv/volatileKV'
 
 // create a kv client - pick one from the 'Supported backing stores' section above
-const kv = (await civilMemoryKV.<mode>())(...)
+const kv = volatileKV()
 
 // use the kv client to ...
 
@@ -149,7 +147,7 @@ All API operations:
 Now, to create a client that connects to the server, you can do the following:
 
 ```TypeScript
-const kv = (await civilMemoryKV.http())({
+const kv = httpKV({
  baseUrl: 'http://localhost:3333?mode=disk&modeOptions.disk.basePath=./my-kv-store'
 })
 ```

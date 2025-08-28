@@ -1,10 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.vercelObjects = vercelObjects;
-async function vercelObjects({ token, url, }) {
-    const objects = await import('@vercel/blob');
+function vercelObjects({ token, url, }) {
+    let objects;
     return {
         async delete(key) {
+            if (!objects) {
+                objects = await import('@vercel/blob');
+            }
             try {
                 await objects.del(key, { token });
             }
@@ -13,6 +16,9 @@ async function vercelObjects({ token, url, }) {
             }
         },
         async get(key) {
+            if (!objects) {
+                objects = await import('@vercel/blob');
+            }
             const response = await fetch(`${url}/${key}`);
             if (!response.ok) {
                 return null;
@@ -20,6 +26,9 @@ async function vercelObjects({ token, url, }) {
             return response.body;
         },
         async info(key) {
+            if (!objects) {
+                objects = await import('@vercel/blob');
+            }
             const info = await objects.head(key, {
                 token,
             });
@@ -30,6 +39,9 @@ async function vercelObjects({ token, url, }) {
             };
         },
         async put(key, value) {
+            if (!objects) {
+                objects = await import('@vercel/blob');
+            }
             await objects.put(key, value, {
                 access: 'public',
                 token,

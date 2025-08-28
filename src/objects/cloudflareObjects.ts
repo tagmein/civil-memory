@@ -2,7 +2,7 @@ import type {
  R2Bucket,
  ReadableStream as CFReadableStream,
 } from '@cloudflare/workers-types'
-import { CivilMemoryObjects } from '..'
+import { CivilMemoryObjects } from '../types'
 
 export function cloudflareObjects({
  binding,

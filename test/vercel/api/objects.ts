@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { civilMemoryObjects } from '@tagmein/civil-memory'
+import { vercelObjects } from '@tagmein/civil-memory/dist/objects/vercelObjects'
 
 export default async function (req: VercelRequest, res: VercelResponse) {
  const { BLOB_URL, BLOB_READ_WRITE_TOKEN } = process.env
@@ -12,7 +12,7 @@ export default async function (req: VercelRequest, res: VercelResponse) {
   throw Error('Missing ENV BLOB_READ_WRITE_TOKEN')
  }
 
- const objects = await civilMemoryObjects.vercel({
+ const objects = await vercelObjects({
   url: BLOB_URL,
   token: BLOB_READ_WRITE_TOKEN,
  })
@@ -40,6 +40,10 @@ export default async function (req: VercelRequest, res: VercelResponse) {
  if (req.method === 'GET') {
   const stream = await objects.get(key)
   return new Promise<void>((resolve, reject) => {
+   if (!stream) {
+    reject('not found')
+    return
+   }
    stream.pipeTo(
     new WritableStream({
      write(chunk) {

@@ -1,15 +1,18 @@
-import { CivilMemoryObjects } from '..'
+import { CivilMemoryObjects } from '../types'
 
-export async function vercelObjects({
+export function vercelObjects({
  token,
  url,
 }: {
  token: string
  url: string
-}): Promise<CivilMemoryObjects> {
- const objects = await import('@vercel/blob')
+}): CivilMemoryObjects {
+ let objects: any
  return {
   async delete(key) {
+   if (!objects) {
+    objects = await import('@vercel/blob')
+   }
    try {
     await objects.del(key, { token })
    } catch (e) {
@@ -18,6 +21,9 @@ export async function vercelObjects({
   },
 
   async get(key) {
+   if (!objects) {
+    objects = await import('@vercel/blob')
+   }
    const response = await fetch(`${url}/${key}`)
    if (!response.ok) {
     return null
@@ -26,6 +32,9 @@ export async function vercelObjects({
   },
 
   async info(key) {
+   if (!objects) {
+    objects = await import('@vercel/blob')
+   }
    const info = await objects.head(key, {
     token,
    })
@@ -37,6 +46,9 @@ export async function vercelObjects({
   },
 
   async put(key, value) {
+   if (!objects) {
+    objects = await import('@vercel/blob')
+   }
    await objects.put(key, value, {
     access: 'public',
     token,

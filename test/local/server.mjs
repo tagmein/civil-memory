@@ -3,7 +3,9 @@ import { dirname, join } from 'node:path'
 import querystring from 'node:querystring'
 import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises'
 
-import { civilMemoryKV } from '../../dist/index.js'
+import { diskKV } from '../../dist/kv/diskKV.js'
+import { httpKV } from '../../dist/kv/httpKV.js'
+import { volatileKV } from '../../dist/kv/volatileKV.js'
 import { collectRequestBody } from './collectRequestBody.mjs'
 
 const DEFAULT_PORT = 3333
@@ -23,17 +25,17 @@ async function main() {
    ? portEnv
    : DEFAULT_PORT
 
- const diskKV = (await civilMemoryKV.disk)({
+ const disk = diskKV({
   rootDir: STORAGE_DIR,
   fsPromises: { mkdir, readFile, unlink, writeFile },
   path: { join },
  })
- const volatileKV = (await civilMemoryKV.volatile)()
+ const volatileStore = volatileKV()
 
  async function getKVByMode(mode, params) {
   switch (mode) {
    case 'disk':
-    return diskKV
+    return disk
    case 'http':
     const httpUrl = params.url
     if (typeof httpUrl !== 'string') {
@@ -41,9 +43,9 @@ async function main() {
      err.statusCode = 400
      throw err
     }
-    return (await civilMemoryKV.http)({ baseUrl: httpUrl })
+    return httpKV({ baseUrl: httpUrl })
    case 'volatile':
-    return volatileKV
+    return volatileStore
    default:
     const err = new Error(
      'parameter mode must be one of: cloudflare, disk, http, vercel, volatile'

@@ -1,4 +1,4 @@
-import { CivilMemoryKV } from '..'
+import { CivilMemoryKV } from '../types'
 
 export function volatileKV(): CivilMemoryKV {
  const data = new Map()

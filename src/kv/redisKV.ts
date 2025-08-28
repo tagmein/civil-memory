@@ -1,6 +1,6 @@
 import { createClient, RedisClientType } from 'redis'
 
-import { CivilMemoryKV } from '..'
+import { CivilMemoryKV } from '../types'
 
 export function redisKV({ url }: { url: string }): CivilMemoryKV {
  let kv: RedisClientType
