@@ -1,5 +1,5 @@
 import type { mkdir, readFile, unlink, writeFile } from 'node:fs/promises'
-import type { join } from 'node:path'
+import { dirname, type join } from 'node:path'
 
 import { CivilMemoryKV } from '../types'
 
@@ -21,29 +21,40 @@ export function diskKV({
 }: CivilMemoryDiskKVOptions): CivilMemoryKV {
  let isInitialized = false
  async function diskPath(namespace: string, key: string) {
-  const namespaceDirPath = path.join(rootDir, encodeURIComponent(namespace))
-  await fsPromises.mkdir(namespaceDirPath, {
-   recursive: true,
-   // todo cache our knowledge that the directory
-   // exists for performance enhancement here
-  })
+  const filePath = [
+   ...namespace.split('/').map(encodeURIComponent),
+   ...key.split('/').map(encodeURIComponent),
+  ]
+  const dirPath = [...filePath]
+  const fileName = dirPath.pop()
+  if (dirPath.length > 0) {
+   await fsPromises.mkdir(path.join(rootDir, ...dirPath), {
+    recursive: true,
+    // todo cache our knowledge that the directory
+    // exists for performance enhancement here
+   })
+  }
   isInitialized = true
-  return path.join(
-   rootDir,
-   encodeURIComponent(namespace),
-   encodeURIComponent(key)
-  )
+  return path.join(rootDir, ...dirPath, fileName)
  }
 
  return {
-  async delete(key: string) {
-   const namespace = key.split('#')[0]
+  async delete(_key: string) {
+   const splitKey = _key.split('#')
+   const namespace = splitKey.shift()
+   const key = splitKey.join('#') || 'index'
+
    try {
-    await fsPromises.unlink(await diskPath(namespace, key))
+    //await fsPromises.unlink(await diskPath(namespace, key))
    } catch (e) {}
   },
-  async get(key: string) {
-   const namespace = key.split('#')[0]
+  async get(_key: string) {
+   const splitKey = _key.split('#')
+   const namespace = splitKey.shift()
+   const key = splitKey.join('#') || 'index'
+
+   console.dir({ splitKey, namespace, key })
+
    try {
     return (await fsPromises.readFile(await diskPath(namespace, key))).toString(
      'utf8'
@@ -52,8 +63,11 @@ export function diskKV({
     return null
    }
   },
-  async set(key: string, value: string) {
-   const namespace = key.split('#')[0]
+  async set(_key: string, value: string) {
+   const splitKey = _key.split('#')
+   const namespace = splitKey.shift()
+   const key = splitKey.join('#') || 'index'
+
    await fsPromises.writeFile(await diskPath(namespace, key), value, 'utf8')
   },
  }

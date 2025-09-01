@@ -1,5 +1,5 @@
 import type { mkdir, readFile, unlink, writeFile } from 'node:fs/promises';
-import type { join } from 'node:path';
+import { type join } from 'node:path';
 import { CivilMemoryKV } from '../types';
 export interface CivilMemoryDiskKVOptions {
     rootDir: string;
