@@ -30,7 +30,7 @@ function diskKV({ rootDir, fsPromises, path, }) {
     }
     return {
         async delete(_key) {
-            const splitKey = _key.split('#');
+            const splitKey = _key.includes('#') ? _key.split('#') : ['', _key];
             const namespace = splitKey.shift();
             const key = splitKey.join('#') || 'index';
             try {
@@ -41,7 +41,7 @@ function diskKV({ rootDir, fsPromises, path, }) {
             }
         },
         async get(_key) {
-            const splitKey = _key.split('#');
+            const splitKey = _key.includes('#') ? _key.split('#') : ['', _key];
             const namespace = splitKey.shift();
             const key = splitKey.join('#') || 'index';
             // console.dir({ splitKey, namespace, key })
@@ -53,7 +53,7 @@ function diskKV({ rootDir, fsPromises, path, }) {
             }
         },
         async set(_key, value) {
-            const splitKey = _key.split('#');
+            const splitKey = _key.includes('#') ? _key.split('#') : ['', _key];
             const namespace = splitKey.shift();
             const key = splitKey.join('#') || 'index';
             await fsPromises.writeFile(await diskPath(namespace, key), value, 'utf8');

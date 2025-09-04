@@ -34,8 +34,7 @@ export function diskKV({
      // todo cache our knowledge that the directory
      // exists for performance enhancement here
     })
-   }
-   catch (e) {
+   } catch (e) {
     // do nothing, our directory already exists
     if (!e.message.startsWith('EEXIST:')) {
      console.warn(e)
@@ -48,7 +47,7 @@ export function diskKV({
 
  return {
   async delete(_key: string) {
-   const splitKey = _key.split('#')
+   const splitKey = _key.includes('#') ? _key.split('#') : ['', _key]
    const namespace = splitKey.shift()
    const key = splitKey.join('#') || 'index'
    try {
@@ -58,7 +57,7 @@ export function diskKV({
    }
   },
   async get(_key: string) {
-   const splitKey = _key.split('#')
+   const splitKey = _key.includes('#') ? _key.split('#') : ['', _key]
    const namespace = splitKey.shift()
    const key = splitKey.join('#') || 'index'
    // console.dir({ splitKey, namespace, key })
@@ -71,7 +70,7 @@ export function diskKV({
    }
   },
   async set(_key: string, value: string) {
-   const splitKey = _key.split('#')
+   const splitKey = _key.includes('#') ? _key.split('#') : ['', _key]
    const namespace = splitKey.shift()
    const key = splitKey.join('#') || 'index'
    await fsPromises.writeFile(await diskPath(namespace, key), value, 'utf8')
