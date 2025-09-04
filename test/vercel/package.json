@@ -6,7 +6,7 @@
  "author": "Nate Ferrero <nate@tagme.in>",
  "license": "ISC",
  "devDependencies": {
-  "@vercel/node": "^3.0.11"
+  "@vercel/node": "^3.0.1"
  },
  "dependencies": {
   "@tagmein/civil-memory": "^0.1.1"
