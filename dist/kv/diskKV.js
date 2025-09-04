@@ -5,17 +5,25 @@ function diskKV({ rootDir, fsPromises, path, }) {
     let isInitialized = false;
     async function diskPath(namespace, key) {
         const filePath = [
-            ...namespace.split('/').map(encodeURIComponent),
+            encodeURIComponent(namespace.split('/').map(encodeURIComponent).join('/')),
             ...key.split('/').map(encodeURIComponent),
         ];
         const dirPath = [...filePath];
         const fileName = dirPath.pop();
         if (dirPath.length > 0) {
-            await fsPromises.mkdir(path.join(rootDir, ...dirPath), {
-                recursive: true,
-                // todo cache our knowledge that the directory
-                // exists for performance enhancement here
-            });
+            try {
+                await fsPromises.mkdir(path.join(rootDir, ...dirPath), {
+                    recursive: true,
+                    // todo cache our knowledge that the directory
+                    // exists for performance enhancement here
+                });
+            }
+            catch (e) {
+                // do nothing, our directory already exists
+                if (!e.message.startsWith('EEXIST:')) {
+                    console.warn(e);
+                }
+            }
         }
         isInitialized = true;
         return path.join(rootDir, ...dirPath, fileName);
@@ -26,15 +34,17 @@ function diskKV({ rootDir, fsPromises, path, }) {
             const namespace = splitKey.shift();
             const key = splitKey.join('#') || 'index';
             try {
-                //await fsPromises.unlink(await diskPath(namespace, key))
+                await fsPromises.unlink(await diskPath(namespace, key));
             }
-            catch (e) { }
+            catch (e) {
+                console.error(e);
+            }
         },
         async get(_key) {
             const splitKey = _key.split('#');
             const namespace = splitKey.shift();
             const key = splitKey.join('#') || 'index';
-            console.dir({ splitKey, namespace, key });
+            // console.dir({ splitKey, namespace, key })
             try {
                 return (await fsPromises.readFile(await diskPath(namespace, key))).toString('utf8');
             }

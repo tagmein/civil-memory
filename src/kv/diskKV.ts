@@ -22,17 +22,25 @@ export function diskKV({
  let isInitialized = false
  async function diskPath(namespace: string, key: string) {
   const filePath = [
-   ...namespace.split('/').map(encodeURIComponent),
+   encodeURIComponent(namespace.split('/').map(encodeURIComponent).join('/')),
    ...key.split('/').map(encodeURIComponent),
   ]
   const dirPath = [...filePath]
   const fileName = dirPath.pop()
   if (dirPath.length > 0) {
-   await fsPromises.mkdir(path.join(rootDir, ...dirPath), {
-    recursive: true,
-    // todo cache our knowledge that the directory
-    // exists for performance enhancement here
-   })
+   try {
+    await fsPromises.mkdir(path.join(rootDir, ...dirPath), {
+     recursive: true,
+     // todo cache our knowledge that the directory
+     // exists for performance enhancement here
+    })
+   }
+   catch (e) {
+    // do nothing, our directory already exists
+    if (!e.message.startsWith('EEXIST:')) {
+     console.warn(e)
+    }
+   }
   }
   isInitialized = true
   return path.join(rootDir, ...dirPath, fileName)
@@ -43,18 +51,17 @@ export function diskKV({
    const splitKey = _key.split('#')
    const namespace = splitKey.shift()
    const key = splitKey.join('#') || 'index'
-
    try {
-    //await fsPromises.unlink(await diskPath(namespace, key))
-   } catch (e) {}
+    await fsPromises.unlink(await diskPath(namespace, key))
+   } catch (e) {
+    console.error(e)
+   }
   },
   async get(_key: string) {
    const splitKey = _key.split('#')
    const namespace = splitKey.shift()
    const key = splitKey.join('#') || 'index'
-
-   console.dir({ splitKey, namespace, key })
-
+   // console.dir({ splitKey, namespace, key })
    try {
     return (await fsPromises.readFile(await diskPath(namespace, key))).toString(
      'utf8'
@@ -67,7 +74,6 @@ export function diskKV({
    const splitKey = _key.split('#')
    const namespace = splitKey.shift()
    const key = splitKey.join('#') || 'index'
-
    await fsPromises.writeFile(await diskPath(namespace, key), value, 'utf8')
   },
  }
