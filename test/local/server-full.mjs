@@ -1,7 +1,9 @@
 import { mkdir, readFile, unlink, writeFile } from 'node:fs/promises'
 import http from 'node:http'
 import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import querystring from 'node:querystring'
+import { platform } from 'node:os'
 
 import { diskKV } from '../../dist/kv/diskKV.js'
 import { httpKV } from '../../dist/kv/httpKV.js'
@@ -16,7 +18,20 @@ const modeVolatile = volatileKV.name?.replace('KV', '')
 
 const DEFAULT_PORT = 3333
 
-const TEST_DIR = dirname(import.meta.url).replace('file://', '')
+// Cross-platform path handling for import.meta.url
+const getTestDir = () => {
+ const isWindows = platform() === 'win32'
+
+ if (isWindows) {
+  // On Windows, use fileURLToPath to properly convert file:// URLs
+  return dirname(fileURLToPath(import.meta.url))
+ } else {
+  // On Unix-like systems (Linux, macOS), simple string replacement works
+  return dirname(import.meta.url.replace('file://', ''))
+ }
+}
+
+const TEST_DIR = getTestDir()
 
 const STORAGE_DIR = join(TEST_DIR, '.tmp-kv')
 
