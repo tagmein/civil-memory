@@ -1,7 +1,7 @@
 {
  "private": false,
  "name": "@tagmein/civil-memory",
- "version": "0.0.19",
+ "version": "0.1.1",
  "description": "Short and long-term memory for your web applications",
  "main": "dist/index.js",
  "types": "dist/index.d.ts",
@@ -32,7 +32,7 @@
   "typescript": "^5.7.3"
  },
  "dependencies": {
-  "@vercel/blob": "^0.16.1",
+  "@vercel/blob": "^1.1.1",
   "redis": "^5.8.2"
  }
 }
