@@ -4,11 +4,16 @@ exports.diskKV = diskKV;
 function diskKV({ rootDir, fsPromises, path, }) {
     let isInitialized = false;
     async function diskPath(namespace, key) {
-        const filePath = [
+        if (namespace === '') {
+            namespace = 'main';
+        }
+        if (key === '') {
+            key = 'index';
+        }
+        const dirPath = [
             encodeURIComponent(namespace.split('/').map(encodeURIComponent).join('/')),
             ...key.split('/').map(encodeURIComponent),
         ];
-        const dirPath = [...filePath];
         const fileName = dirPath.pop();
         if (dirPath.length > 0) {
             try {
@@ -30,7 +35,7 @@ function diskKV({ rootDir, fsPromises, path, }) {
     }
     return {
         async delete(_key) {
-            const splitKey = _key.includes('#') ? _key.split('#') : ['', _key];
+            const splitKey = _key.includes('#') ? _key.split('#') : ['main', _key];
             const namespace = splitKey.shift();
             const key = splitKey.join('#') || 'index';
             try {
@@ -41,10 +46,9 @@ function diskKV({ rootDir, fsPromises, path, }) {
             }
         },
         async get(_key) {
-            const splitKey = _key.includes('#') ? _key.split('#') : ['', _key];
+            const splitKey = _key.includes('#') ? _key.split('#') : ['main', _key];
             const namespace = splitKey.shift();
             const key = splitKey.join('#') || 'index';
-            // console.dir({ splitKey, namespace, key })
             try {
                 return (await fsPromises.readFile(await diskPath(namespace, key))).toString('utf8');
             }
@@ -53,7 +57,7 @@ function diskKV({ rootDir, fsPromises, path, }) {
             }
         },
         async set(_key, value) {
-            const splitKey = _key.includes('#') ? _key.split('#') : ['', _key];
+            const splitKey = _key.includes('#') ? _key.split('#') : ['main', _key];
             const namespace = splitKey.shift();
             const key = splitKey.join('#') || 'index';
             await fsPromises.writeFile(await diskPath(namespace, key), value, 'utf8');

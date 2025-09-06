@@ -154,7 +154,14 @@
      const httpUrlParam =
       mode === 'http' ? `&url=${encodeURIComponent(httpUrl.value)}` : ''
 
-     for (const key of ['mykey', 'mynamespace#mykey']) {
+     for (const key of [
+      '',
+      'myfolder/mykey',
+      'mykey',
+      'mynamespace#',
+      'mynamespace#myfolder/mykey',
+      'mynamespace#mykey',
+     ]) {
       const k = JSON.stringify(key)
 
       await runTest(`Delete key ${k} to reset`, async () => {

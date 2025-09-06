@@ -96,6 +96,8 @@ The structure of keys is as follows:
 <namepsace>#<key>
 ```
 
+Keys without a namespace are assigned the namespace `main`, and this implies that `mykey` and `main#mykey` are functionally-equivalent.
+
 Both the `namespace` and the `key` should be URL-encoded to prevent unencoded `#` characters in them from interfering with the parsing of the key.
 
 ```TypeScript

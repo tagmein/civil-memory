@@ -1,7 +1,7 @@
 {
  "private": false,
  "name": "@tagmein/civil-memory",
- "version": "0.1.4",
+ "version": "0.1.5",
  "description": "Short and long-term memory for your web applications",
  "main": "dist/index.js",
  "types": "dist/index.d.ts",
@@ -13,16 +13,20 @@
   "test:install": "cd test/cloudflare ; npm i ; cd ../.. ; cd test/vercel ; npm i ; cd ../.."
  },
  "keywords": [
-  "key",
-  "value",
+  "blob",
   "data",
   "database",
-  "redis",
-  "blob",
-  "storage",
+  "files",
+  "key",
+  "kv",
   "memory",
+  "namespace",
+  "nosql",
   "persistence",
-  "files"
+  "redis",
+  "storage",
+  "store",
+  "value"
  ],
  "author": "Nate Ferrero <nate@tagme.in>",
  "license": "ISC",

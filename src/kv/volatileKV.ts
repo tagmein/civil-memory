@@ -5,13 +5,17 @@ export function volatileKV(): CivilMemoryKV {
 
  return {
   async delete(key: string) {
-   const [namespace, keyName] = key.includes('#') ? key.split('#') : ['', key]
+   const [namespace, keyName] = key.includes('#')
+    ? key.split('#')
+    : ['main', key]
    const namespaceMap = data.get(namespace)
    namespaceMap?.delete?.(keyName)
   },
 
   async get(key: string) {
-   const [namespace, keyName] = key.includes('#') ? key.split('#') : ['', key]
+   const [namespace, keyName] = key.includes('#')
+    ? key.split('#')
+    : ['main', key]
    const namespaceMap = data.get(namespace)
    if (!namespaceMap) return null
 
@@ -19,7 +23,9 @@ export function volatileKV(): CivilMemoryKV {
   },
 
   async set(key: string, value: string) {
-   const [namespace, keyName] = key.includes('#') ? key.split('#') : ['', key]
+   const [namespace, keyName] = key.includes('#')
+    ? key.split('#')
+    : ['main', key]
 
    let namespaceMap = data.get(namespace)
 

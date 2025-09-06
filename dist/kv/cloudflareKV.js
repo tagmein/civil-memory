@@ -3,13 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.cloudflareKV = cloudflareKV;
 function cloudflareKV({ binding, }) {
     return {
-        delete(key) {
+        delete(_key) {
+            const key = _key.includes('#') ? _key : 'main#' + _key;
             return binding.delete(key);
         },
-        get(key) {
+        get(_key) {
+            const key = _key.includes('#') ? _key : 'main#' + _key;
             return binding.get(key);
         },
-        set(key, value) {
+        set(_key, value) {
+            const key = _key.includes('#') ? _key : 'main#' + _key;
             return binding.put(key, value);
         },
     };

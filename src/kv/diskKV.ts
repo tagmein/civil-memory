@@ -21,11 +21,16 @@ export function diskKV({
 }: CivilMemoryDiskKVOptions): CivilMemoryKV {
  let isInitialized = false
  async function diskPath(namespace: string, key: string) {
-  const filePath = [
+  if (namespace === '') {
+   namespace = 'main'
+  }
+  if (key === '') {
+   key = 'index'
+  }
+  const dirPath = [
    encodeURIComponent(namespace.split('/').map(encodeURIComponent).join('/')),
    ...key.split('/').map(encodeURIComponent),
   ]
-  const dirPath = [...filePath]
   const fileName = dirPath.pop()
   if (dirPath.length > 0) {
    try {
@@ -47,7 +52,7 @@ export function diskKV({
 
  return {
   async delete(_key: string) {
-   const splitKey = _key.includes('#') ? _key.split('#') : ['', _key]
+   const splitKey = _key.includes('#') ? _key.split('#') : ['main', _key]
    const namespace = splitKey.shift()
    const key = splitKey.join('#') || 'index'
    try {
@@ -57,10 +62,9 @@ export function diskKV({
    }
   },
   async get(_key: string) {
-   const splitKey = _key.includes('#') ? _key.split('#') : ['', _key]
+   const splitKey = _key.includes('#') ? _key.split('#') : ['main', _key]
    const namespace = splitKey.shift()
    const key = splitKey.join('#') || 'index'
-   // console.dir({ splitKey, namespace, key })
    try {
     return (await fsPromises.readFile(await diskPath(namespace, key))).toString(
      'utf8'
@@ -70,7 +74,7 @@ export function diskKV({
    }
   },
   async set(_key: string, value: string) {
-   const splitKey = _key.includes('#') ? _key.split('#') : ['', _key]
+   const splitKey = _key.includes('#') ? _key.split('#') : ['main', _key]
    const namespace = splitKey.shift()
    const key = splitKey.join('#') || 'index'
    await fsPromises.writeFile(await diskPath(namespace, key), value, 'utf8')
